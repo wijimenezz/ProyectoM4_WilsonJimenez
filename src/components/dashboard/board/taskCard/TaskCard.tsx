@@ -1,3 +1,4 @@
+import "./TaskCard.css";
 import { Avatar } from "../../../avatar";
 import {
   ClockIcon,

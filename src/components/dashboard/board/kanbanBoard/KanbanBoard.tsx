@@ -1,3 +1,4 @@
+import "./KanbanBoard.css";
 import { TaskCard } from "../taskCard/TaskCard";
 import { KanbanColumn } from "./KanbanColumn";
 
