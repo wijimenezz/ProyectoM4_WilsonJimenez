@@ -1,4 +1,5 @@
 import { PlusIcon } from "../../shared/icons";
+import "./BoardHeader.css";
 
 export const BoardHeader = () => (
   <div className="board-header">
