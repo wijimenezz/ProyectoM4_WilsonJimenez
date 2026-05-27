@@ -1,5 +1,6 @@
 import { TaskCard } from "../taskCard/TaskCard";
 import { KanbanColumn } from "./KanbanColumn";
+import "./KanbanBoard.css";
 
 export const KanbanBoard = () => (
   <div className="kanban-board" aria-label="Kanban board" role="region">
