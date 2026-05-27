@@ -1,7 +1,13 @@
 import { PlusIcon } from "../../shared/icons";
 import "./BoardHeader.css";
 
-export const BoardHeader = () => (
+// ← 1. definir la interfaz del prop
+interface BoardHeaderProps {
+  onNewTask: () => void;
+}
+
+// ← 2. recibir el prop (ya no es () => sino ({ onNewTask }) =>)
+export const BoardHeader = ({ onNewTask }: BoardHeaderProps) => (
   <div className="board-header">
     <div className="board-header__title-area">
       <div className="board-header__breadcrumb" aria-label="Breadcrumb">
@@ -109,7 +115,12 @@ export const BoardHeader = () => (
         Add Column
       </button>
 
-      <button className="btn btn--primary btn--sm" type="button">
+      {/* ← 3. onClick conectado al prop */}
+      <button
+        className="btn btn--primary btn--sm"
+        type="button"
+        onClick={onNewTask}
+      >
         <PlusIcon color="white" strokeWidth={1.8} />
         New Task
       </button>
