@@ -1,4 +1,5 @@
 import { Avatar } from "../../avatar";
+import "./Topnavigation.css";
 
 export const TopNavigation = () => (
   <header className="top-nav" role="banner">
