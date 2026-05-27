@@ -1,4 +1,3 @@
-import type { TaskCardProps } from "../../../../types";
 import { Avatar } from "../../../avatar";
 import {
   ClockIcon,
@@ -6,8 +5,8 @@ import {
   DotsVerticalIcon,
 } from "../../../shared/icons";
 import { ProgressBar } from "./ProgressBar";
+import type { BadgeColor, TaskCardProps } from "./TaskCard.Types";
 
-type BadgeColor = "indigo" | "emerald" | "amber" | "rose" | "violet" | "slate";
 const TaskBadge = ({ color, label }: { color: BadgeColor; label: string }) => (
   <span className={`task-card__badge task-card__badge--${color}`}>{label}</span>
 );
