@@ -18,12 +18,25 @@ export const DashboardPage = () => {
       id: crypto.randomUUID(),
       title: data.title,
       description: data.description,
-      badge: { label: "Task", color: data.color },
+
+      badge: {
+        label: "Task",
+        color: data.color,
+      },
+
       deadline: data.deadline || undefined,
+
       progress: 0,
+
       assignees: [],
+
+      checklist: data.checklist,
+
+      attachments: data.attachments,
+
       columnId: "todo",
     };
+
     setTasks((prev) => [...prev, newTask]);
   };
 

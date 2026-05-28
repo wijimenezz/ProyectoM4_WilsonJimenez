@@ -1,3 +1,8 @@
+import type {
+  Attachment,
+  ChecklistItem,
+} from "../../../taskForm/TypesTaskForm";
+
 export type BadgeColor =
   | "indigo"
   | "emerald"
@@ -25,10 +30,26 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  badge: { label: string; color: BadgeColor };
+
+  badge: {
+    label: string;
+    color: BadgeColor;
+  };
+
   deadline?: string;
+
   progress: number;
-  assignees: Array<{ initials: string; label: string }>;
+
+  assignees: Array<{
+    initials: string;
+    label: string;
+  }>;
+
+  checklist: ChecklistItem[];
+
+  attachments: Attachment[];
+
   columnId: ColumnId;
+
   done?: boolean;
 }
