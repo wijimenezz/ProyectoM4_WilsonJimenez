@@ -1,9 +1,9 @@
 .top-nav {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
-  padding: 0 var(--space-6);
-  height: 60px;
+  gap: var(--space-3);
+  padding: 0 var(--space-4);
+  height: 56px;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   position: sticky;
@@ -13,76 +13,36 @@
   flex-shrink: 0;
 }
 
-/* --- Brand --- */
-.top-nav__brand {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-shrink: 0;
-}
-
-.top-nav__app-name {
-  font-size: var(--font-size-md);
-  font-weight: 800;
-  color: var(--color-navy);
-  letter-spacing: -0.02em;
-}
-
-/* --- Nav Links --- */
+/* Nav links hidden on mobile — shown at md+ */
 .top-nav__links {
+  display: none;
   flex: 1;
 }
 
-.top-nav__link-list {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.top-nav__link {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--color-text-muted);
-  border-radius: var(--radius-md);
-  transition:
-    color var(--transition-fast),
-    background var(--transition-fast);
-}
-
-.top-nav__link:hover {
-  color: var(--color-navy);
-  background: var(--color-bg);
-}
-
-.top-nav__link--active {
-  color: var(--color-indigo);
-  background: var(--color-indigo-light);
-  font-weight: 600;
-}
-
-/* --- Actions (right side) --- */
+/* Actions pushed to the right */
 .top-nav__actions {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   margin-left: auto;
 }
 
+/* Hide user info text on mobile, show icon only */
+.top-nav__user-info {
+  display: none;
+}
+
 .top-nav__icon-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
   color: var(--color-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   transition: background var(--transition-fast);
 }
 
@@ -94,11 +54,11 @@
   position: absolute;
   top: 4px;
   right: 4px;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   background: var(--color-danger);
   color: white;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
   border-radius: var(--radius-full);
   display: flex;
@@ -111,7 +71,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1);
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
@@ -123,22 +83,96 @@
   background: var(--color-bg);
 }
 
-.top-nav__user-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-}
-
-.top-nav__user-name {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
+.top-nav__app-name {
+  font-size: var(--font-size-md);
+  font-weight: 800;
   color: var(--color-navy);
-  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
-.top-nav__user-role {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  line-height: 1;
+.top-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* md: show nav links and user info */
+@media (min-width: 768px) {
+  .top-nav {
+    gap: var(--space-6);
+    padding: 0 var(--space-6);
+    height: 60px;
+  }
+
+  .top-nav__links {
+    display: flex;
+    flex: 1;
+  }
+
+  .top-nav__link-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .top-nav__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-md);
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast);
+  }
+
+  .top-nav__link:hover {
+    color: var(--color-navy);
+    background: var(--color-bg);
+  }
+
+  .top-nav__link--active {
+    color: var(--color-indigo);
+    background: var(--color-indigo-light);
+    font-weight: 600;
+  }
+
+  .top-nav__actions {
+    gap: var(--space-2);
+  }
+
+  .top-nav__icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .top-nav__badge {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+
+  .top-nav__user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+
+  .top-nav__user-name {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-navy);
+    line-height: 1;
+  }
+
+  .top-nav__user-role {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    line-height: 1;
+  }
 }
