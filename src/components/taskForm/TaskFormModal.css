@@ -3,36 +3,54 @@
   inset: 0;
   z-index: 100;
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end; /* Sheet slides up from bottom */
   justify-content: center;
-  padding: var(--space-8) var(--space-4);
+  padding: 0;
   background: rgba(15, 23, 42, 0.5);
   backdrop-filter: blur(4px);
-  min-height: 100%;
 }
 
-/* --- Modal Card --- */
 .modal {
   width: 100%;
-  max-width: 580px;
+  max-width: 100%;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0; /* Rounded top only */
   box-shadow: var(--shadow-modal);
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 80px);
+  max-height: 92dvh; /* Use dynamic viewport height */
   overflow: hidden;
 }
 
-/* --- Modal Header --- */
+/* md: centered dialog */
+@media (min-width: 768px) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding: var(--space-8) var(--space-4);
+    min-height: 100%;
+  }
+
+  .modal {
+    max-width: 580px;
+    border-radius: var(--radius-lg);
+    max-height: calc(100vh - 80px);
+  }
+}
+
 .modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-5) var(--space-6);
+  padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .modal__header {
+    padding: var(--space-5) var(--space-6);
+  }
 }
 
 .modal__title {
@@ -45,8 +63,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px; /* Larger tap target */
+  height: 36px;
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
@@ -61,22 +79,42 @@
   color: var(--color-navy);
 }
 
-/* --- Modal Body --- */
+@media (min-width: 768px) {
+  .modal__close-btn {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 .modal__body {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-5) var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
 }
 
-/* --- Modal Footer --- */
+@media (min-width: 768px) {
+  .modal__body {
+    padding: var(--space-5) var(--space-6);
+  }
+}
+
 .modal__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-3) var(--space-5);
   border-top: 1px solid var(--color-border);
   background: var(--color-bg);
   flex-shrink: 0;
+  /* Extra bottom padding for iOS safe area */
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .modal__footer {
+    padding: var(--space-4) var(--space-6);
+  }
 }
 
 .modal__footer-right {
@@ -85,14 +123,14 @@
   gap: var(--space-2);
 }
 
-/* --- Task Form --- */
+/* ─── TASK FORM INTERNALS ─────────────────────── */
+
 .task-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-/* --- Color Selector --- */
 .color-selector {
   display: flex;
   align-items: center;
@@ -105,8 +143,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px; /* Slightly bigger on mobile */
+  height: 32px;
   border-radius: var(--radius-full);
   border: 2px solid transparent;
   cursor: pointer;
@@ -114,6 +152,13 @@
     transform var(--transition-fast),
     border-color var(--transition-fast),
     box-shadow var(--transition-fast);
+}
+
+@media (min-width: 768px) {
+  .color-selector__swatch {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 .color-selector__swatch:hover {
@@ -151,14 +196,13 @@
   flex-shrink: 0;
 }
 
-/* --- Dropzone --- */
 .dropzone {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-6);
+  padding: var(--space-5) var(--space-4);
   border: 2px dashed var(--color-border);
   border-radius: var(--radius-md);
   text-align: center;
@@ -201,7 +245,6 @@
   color: var(--color-text-muted);
 }
 
-/* --- Attachment Previews --- */
 .attachment-previews {
   display: flex;
   flex-wrap: wrap;
@@ -241,12 +284,13 @@
   color: var(--color-navy-800);
 }
 
+/* Remove button: always visible on touch */
 .attachment-thumb__remove {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   background: transparent;
   border: none;
   color: var(--color-text-muted);
@@ -262,7 +306,6 @@
   color: var(--color-navy);
 }
 
-/* --- Checklist --- */
 .checklist-header {
   display: flex;
   align-items: center;
@@ -295,37 +338,47 @@
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   transition: background var(--transition-fast);
+  min-height: 40px; /* Comfortable tap target */
 }
 
 .checklist__item:hover {
   background: var(--color-bg);
 }
-
 .checklist__item--done .checkbox-text {
   text-decoration: line-through;
   color: var(--color-text-muted);
 }
 
+/* Remove: always visible on touch */
 .checklist__remove {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
   background: transparent;
   border: none;
   color: var(--color-text-soft);
   border-radius: var(--radius-sm);
-  opacity: 0;
+  opacity: 1; /* Always visible on mobile */
   transition:
     opacity var(--transition-fast),
     background var(--transition-fast);
   cursor: pointer;
 }
 
-.checklist__item:hover .checklist__remove {
-  opacity: 1;
+/* On pointer devices: hide until hover */
+@media (hover: hover) {
+  .checklist__remove {
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+  }
+
+  .checklist__item:hover .checklist__remove {
+    opacity: 1;
+  }
 }
 
 .checklist__remove:hover {
@@ -343,8 +396,9 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-3); /* Taller on mobile */
   border-radius: var(--radius-md);
+  width: 100%;
   transition:
     color var(--transition-fast),
     background var(--transition-fast);
