@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { Attachment } from "./TypesTaskForm";
 
 // --- Ícono de subida ---
@@ -37,24 +38,62 @@ const CloseIcon = () => (
 );
 
 // --- Sub-componente: Dropzone ---
-const Dropzone = () => (
-  <div
-    className="dropzone"
-    role="button"
-    aria-label="Upload files by clicking or drag and drop"
-    tabIndex={0}
-  >
-    <div className="dropzone__icon" aria-hidden="true">
-      <UploadIcon />
+
+interface DropzoneProps {
+  onAdd: (files: Attachment[]) => void;
+}
+
+const Dropzone = ({ onAdd }: DropzoneProps) => {
+  // referencia al input file
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // cuando usuario selecciona archivos
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (!files) return;
+
+    // convertir FileList → Attachment[]
+    const mappedFiles: Attachment[] = Array.from(files).map((file) => ({
+      id: crypto.randomUUID(),
+      name: file.name,
+      type: file.type.startsWith("image") ? "img" : "doc",
+    }));
+
+    // enviar archivos al padre
+    onAdd(mappedFiles);
+  };
+
+  return (
+    <div
+      className="dropzone"
+      role="button"
+      tabIndex={0}
+      onClick={() => inputRef.current?.click()}
+    >
+      {/* input REAL oculto */}
+      <input
+        ref={inputRef}
+        type="file"
+        hidden
+        multiple
+        onChange={handleFileChange}
+      />
+
+      <div className="dropzone__icon" aria-hidden="true">
+        <UploadIcon />
+      </div>
+
+      <p className="dropzone__primary-text">
+        Drag files here or <span className="dropzone__link">browse</span>
+      </p>
+
+      <p className="dropzone__helper-text">
+        Supports PNG, JPG, PDF, DOCX up to 25 MB each
+      </p>
     </div>
-    <p className="dropzone__primary-text">
-      Drag files here or <span className="dropzone__link">browse</span>
-    </p>
-    <p className="dropzone__helper-text">
-      Supports PNG, JPG, PDF, DOCX up to 25 MB each
-    </p>
-  </div>
-);
+  );
+};
 
 // --- Sub-componente: AttachThumb (una miniatura por archivo) ---
 interface AttachThumbProps {
@@ -142,15 +181,17 @@ const AttachThumb = ({ attachment, onRemove }: AttachThumbProps) => (
 interface AttachmentsFieldProps {
   attachments: Attachment[];
   onRemove: (id: string) => void;
+  onAdd: (files: Attachment[]) => void;
 }
 
 export const AttachmentsField = ({
   attachments,
   onRemove,
+  onAdd,
 }: AttachmentsFieldProps) => (
   <div className="form-group">
     <span className="form-label">Attachments</span>
-    <Dropzone />
+    <Dropzone onAdd={onAdd} />
     {attachments.length > 0 && (
       <div className="attachment-previews" aria-label="Uploaded attachments">
         {attachments.map((att) => (

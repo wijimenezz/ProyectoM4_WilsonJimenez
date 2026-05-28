@@ -18,18 +18,9 @@ interface TaskFormModalProps {
   onSubmit?: (data: TaskFormData) => void;
 }
 
-const INITIAL_CHECKLIST: ChecklistItem[] = [
-  { id: "cl-1", text: "Review existing wireframes", done: true },
-  { id: "cl-2", text: "Create initial mockup in Figma", done: true },
-  { id: "cl-3", text: "Get stakeholder feedback", done: false },
-  { id: "cl-4", text: "Implement revisions", done: false },
-  { id: "cl-5", text: "Final design handoff to dev", done: false },
-];
+const INITIAL_CHECKLIST: ChecklistItem[] = [];
 
-const INITIAL_ATTACHMENTS: Attachment[] = [
-  { id: "att-1", name: "wireframe.png", type: "img" },
-  { id: "att-2", name: "brief.pdf", type: "doc" },
-];
+const INITIAL_ATTACHMENTS: Attachment[] = [];
 
 export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
   // --- Estado del formulario ---
@@ -45,6 +36,9 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
   // --- Handlers ---
   const handleRemoveAttachment = (id: string) => {
     setAttachments((prev) => prev.filter((a) => a.id !== id));
+  };
+  const handleAddAttachments = (newFiles: Attachment[]) => {
+    setAttachments((prev) => [...prev, ...newFiles]);
   };
 
   const handleSubmit = () => {
@@ -121,6 +115,7 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
             <AttachmentsField
               attachments={attachments}
               onRemove={handleRemoveAttachment}
+              onAdd={handleAddAttachments}
             />
 
             {/* ⑥ Molécula: checklist */}
