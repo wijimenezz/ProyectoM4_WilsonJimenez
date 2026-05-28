@@ -1,116 +1,72 @@
+// ======= ASÍ DEBE QUEDAR EL ARCHIVO COMPLETO =======
+
 import "./KanbanBoard.css";
 import { TaskCard } from "../taskCard/TaskCard";
+import type { Task } from "../taskCard/TaskCard.Types";
 import { KanbanColumn } from "./KanbanColumn";
 
-export const KanbanBoard = () => (
-  <div className="kanban-board" aria-label="Kanban board" role="region">
-    <div className="kanban-board__scroll-container">
-      {/* To Do */}
-      <KanbanColumn title="To Do" count={2} accent="slate">
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Write onboarding email sequence"
-            description="Create 5-email drip sequence for new free-tier signups covering key features."
-            badge={{ label: "Copy", color: "violet" }}
-            deadline="Jan 12, 2026"
-            progress={0}
-            assignees={[{ initials: "MR", label: "Assigned to: MR" }]}
-          />
-        </li>
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Configure GitHub Actions pipeline"
-            description="Set up automated testing and deployment on push to main branch."
-            badge={{ label: "DevOps", color: "emerald" }}
-            deadline="Jan 20, 2026"
-            progress={0}
-            assignees={[{ initials: "TK", label: "Assigned to: TK" }]}
-          />
-        </li>
-      </KanbanColumn>
+// ======= NUEVO: recibe tasks como prop =======
+interface KanbanBoardProps {
+  tasks: Task[];
+}
 
-      {/* In Progress */}
-      <KanbanColumn
-        title="In Progress"
-        count={2}
-        accent="indigo"
-        countVariant="active"
-      >
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Redesign landing page hero section"
-            description="Update the hero with new brand guidelines and improved mobile layout."
-            badge={{ label: "Design", color: "indigo" }}
-            deadline="Dec 18, 2025"
-            progress={75}
-            assignees={[
-              { initials: "AL", label: "Assigned to: Alice" },
-              { initials: "BK", label: "Also assigned to: Bob" },
-            ]}
-          />
-        </li>
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Build REST API for user authentication"
-            description="JWT-based auth with login, register, and refresh token endpoints."
-            badge={{ label: "Dev", color: "emerald" }}
-            deadline="Jan 5, 2026"
-            progress={40}
-            assignees={[{ initials: "CM", label: "Assigned to: Carlos" }]}
-          />
-        </li>
-      </KanbanColumn>
+export const KanbanBoard = ({ tasks }: KanbanBoardProps) => {
+  // ======= NUEVO: filtra las tareas por columna =======
+  const todo = tasks.filter((t) => t.columnId === "todo");
+  const inProgress = tasks.filter((t) => t.columnId === "in-progress");
+  const done = tasks.filter((t) => t.columnId === "done");
+  const backlog = tasks.filter((t) => t.columnId === "backlog");
+  // ======= FIN NUEVO =======
 
-      {/* Done */}
-      <KanbanColumn title="Done" count={2} accent="emerald" countVariant="done">
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Set up Figma design system"
-            description="Create component library with tokens, typography, and color styles."
-            badge={{ label: "Design", color: "indigo" }}
-            progress={100}
-            progressVariant="success"
-            assignees={[{ initials: "AL", label: "Assigned to: Alice" }]}
-            done
-          />
-        </li>
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Stakeholder project kickoff meeting"
-            description="Align team on goals, timelines, and success metrics for the redesign."
-            badge={{ label: "Meeting", color: "amber" }}
-            progress={100}
-            progressVariant="success"
-            assignees={[
-              { initials: "JS", label: "Assigned to: Jane" },
-              { initials: "AL", label: "Also assigned to: Alice" },
-            ]}
-            done
-          />
-        </li>
-      </KanbanColumn>
+  return (
+    <div className="kanban-board" aria-label="Kanban board" role="region">
+      <div className="kanban-board__scroll-container">
+        {/* count={todo.length} ← ya no es hardcodeado, se calcula solo */}
+        <KanbanColumn title="To Do" count={todo.length} accent="slate">
+          {/* ======= NUEVO: renderiza dinámico en lugar de hardcodeado ======= */}
+          {todo.map((task) => (
+            <li key={task.id} className="kanban-column__list-item">
+              <TaskCard {...task} />
+            </li>
+          ))}
+          {/* ======= FIN NUEVO ======= */}
+        </KanbanColumn>
 
-      {/* Backlog */}
-      <KanbanColumn title="Backlog" count={2} accent="amber">
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Add dark mode support across all pages"
-            description="Implement system-preference-aware dark mode using CSS variables and prefers-color-scheme."
-            badge={{ label: "Feature", color: "slate" }}
-            progress={0}
-            assignees={[]}
-          />
-        </li>
-        <li className="kanban-column__list-item">
-          <TaskCard
-            title="Core Web Vitals performance audit"
-            description="Run Lighthouse audits and fix LCP, FID, CLS issues across all key pages."
-            badge={{ label: "Perf", color: "rose" }}
-            progress={0}
-            assignees={[]}
-          />
-        </li>
-      </KanbanColumn>
+        <KanbanColumn
+          title="In Progress"
+          count={inProgress.length}
+          accent="indigo"
+          countVariant="active"
+        >
+          {inProgress.map((task) => (
+            <li key={task.id} className="kanban-column__list-item">
+              <TaskCard {...task} />
+            </li>
+          ))}
+        </KanbanColumn>
+
+        <KanbanColumn
+          title="Done"
+          count={done.length}
+          accent="emerald"
+          countVariant="done"
+        >
+          {done.map((task) => (
+            <li key={task.id} className="kanban-column__list-item">
+              <TaskCard {...task} done />
+            </li>
+          ))}
+        </KanbanColumn>
+
+        <KanbanColumn title="Backlog" count={backlog.length} accent="amber">
+          {backlog.map((task) => (
+            <li key={task.id} className="kanban-column__list-item">
+              <TaskCard {...task} />
+            </li>
+          ))}
+        </KanbanColumn>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+// ======= FIN ARCHIVO =======
