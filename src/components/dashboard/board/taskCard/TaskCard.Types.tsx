@@ -18,3 +18,17 @@ export interface TaskCardProps {
   overdue?: boolean;
   done?: boolean;
 }
+
+export type ColumnId = "todo" | "in-progress" | "done" | "backlog";
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  badge: { label: string; color: BadgeColor };
+  deadline?: string;
+  progress: number;
+  assignees: Array<{ initials: string; label: string }>;
+  columnId: ColumnId;
+  done?: boolean;
+}
