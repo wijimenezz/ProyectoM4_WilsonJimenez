@@ -1,4 +1,3 @@
-/* --- Main content area --- */
 .dashboard__main {
   flex: 1;
   display: flex;
@@ -6,51 +5,67 @@
   overflow: hidden;
 }
 
-/* --- Board scroll container --- */
+/* Mobile: vertical stack of columns, no horizontal scroll */
 .kanban-board {
   flex: 1;
   overflow: hidden;
-  padding: 0 var(--space-6) var(--space-6);
+  padding: 0 var(--space-4) var(--space-6);
 }
 
 .kanban-board__scroll-container {
   display: flex;
+  flex-direction: column; /* Stack columns on mobile */
   gap: var(--space-4);
-  overflow-x: auto;
   padding-bottom: var(--space-4);
-  min-height: 500px;
-  align-items: flex-start;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
+  min-height: 300px;
+  align-items: stretch;
 }
 
-.kanban-board__scroll-container::-webkit-scrollbar {
-  height: 6px;
-}
-
-.kanban-board__scroll-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.kanban-board__scroll-container::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: var(--radius-full);
-}
-
-/* --- Column --- */
 .kanban-column {
   flex-shrink: 0;
-  width: 300px;
+  width: 100%; /* Full width on mobile */
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  gap: 0;
   overflow: hidden;
 }
 
-/* --- Column Header --- */
+/* md: horizontal scrolling Kanban */
+@media (min-width: 768px) {
+  .kanban-board {
+    padding: 0 var(--space-6) var(--space-6);
+  }
+
+  .kanban-board__scroll-container {
+    flex-direction: row;
+    overflow-x: auto;
+    min-height: 500px;
+    align-items: flex-start;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .kanban-board__scroll-container::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .kanban-board__scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .kanban-board__scroll-container::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+  }
+
+  .kanban-column {
+    width: 300px;
+  }
+}
+
+/* Column header — same at all breakpoints */
 .kanban-column__header {
   position: relative;
   display: flex;
@@ -61,7 +76,6 @@
   background: var(--color-surface);
 }
 
-/* Top accent bar */
 .kanban-column__accent {
   position: absolute;
   top: 0;
@@ -116,6 +130,7 @@
   border-color: var(--color-indigo-soft);
   color: var(--badge-indigo-text);
 }
+
 .kanban-column__count--done {
   background: var(--badge-emerald-bg);
   border-color: #6ee7b7;
@@ -140,12 +155,11 @@
   background: var(--color-bg);
 }
 
-/* --- Task List --- */
 .kanban-column__list {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-3);
+  padding: var(--space-3);
   flex: 1;
 }
 
@@ -153,7 +167,6 @@
   list-style: none;
 }
 
-/* --- Add Task Button --- */
 .kanban-column__add-task {
   display: flex;
   align-items: center;
