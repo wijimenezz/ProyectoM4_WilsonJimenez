@@ -1,0 +1,37 @@
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+@media (min-width: 480px) {
+  .auth-divider {
+    margin: var(--space-5) 0;
+  }
+}
+
+.auth-divider__line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.auth-divider__text {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.oauth-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+@media (min-width: 360px) {
+  .oauth-group {
+    grid-template-columns: 1fr 1fr;
+  }
+}

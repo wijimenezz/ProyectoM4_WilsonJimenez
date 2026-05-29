@@ -1,5 +1,7 @@
 @import "./styles/buttons.css";
 @import "./styles/forms.css";
+@import "./styles/authgroup.css";
+@import "./styles/authPages.css";
 
 :root {
   /* Colors — unchanged */
