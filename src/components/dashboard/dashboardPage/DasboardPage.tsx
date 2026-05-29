@@ -6,8 +6,9 @@ import { TopNavigation } from "../topNavigation/TopNavigation";
 
 import type { Task } from "../board/taskCard/TaskCard.Types";
 import { INITIAL_TASKS } from "../../../data/InitialTasks";
-import type { TaskFormData } from "../../taskForm/TypesTaskForm";
+import type { ChecklistItem, TaskFormData } from "../../taskForm/TypesTaskForm";
 import TaskFormModal from "../../taskForm/TaskFormModal";
+import ChecklistModal from "../../taskForm/CheckListModal";
 
 export const DashboardPage = () => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
@@ -47,6 +48,31 @@ export const DashboardPage = () => {
     setSelectedTask(task);
   };
 
+  const handleSaveChecklist = (updatedChecklist: ChecklistItem[]) => {
+    if (!selectedTask) return;
+
+    const progress =
+      updatedChecklist.length > 0
+        ? Math.round(
+            (updatedChecklist.filter((i) => i.done).length /
+              updatedChecklist.length) *
+              100,
+          )
+        : 0;
+
+    const updatedTask: Task = {
+      ...selectedTask,
+      checklist: updatedChecklist,
+      progress,
+    };
+
+    setTasks((prev) =>
+      prev.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
+    );
+
+    setSelectedTask(null);
+  };
+
   return (
     <div className="dashboard">
       <TopNavigation />
@@ -54,25 +80,15 @@ export const DashboardPage = () => {
         <BoardHeader onNewTask={() => setShowModal(true)} />
 
         <KanbanBoard tasks={tasks} onTaskClick={openTask} />
+
         {selectedTask && (
-          <div
-            style={{
-              position: "fixed",
-              top: 20,
-              right: 20,
-              background: "white",
-              padding: "20px",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              zIndex: 9999,
-            }}
-          >
-            <h3>{selectedTask.title}</h3>
-
-            <p>{selectedTask.description}</p>
-
-            <button onClick={() => setSelectedTask(null)}>Close</button>
-          </div>
+          <ChecklistModal
+            title={selectedTask.title}
+            description={selectedTask.description}
+            checklist={selectedTask.checklist}
+            onClose={() => setSelectedTask(null)}
+            onSave={handleSaveChecklist}
+          />
         )}
       </main>
 

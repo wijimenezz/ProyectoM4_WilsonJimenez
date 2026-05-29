@@ -8,6 +8,7 @@ export type SwatchColor =
 
 export interface ChecklistItem {
   id: string;
+  description: string;
   text: string;
   done: boolean;
 }

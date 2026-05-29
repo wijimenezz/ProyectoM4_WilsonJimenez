@@ -1,0 +1,30 @@
+* [33m979517e[m[33m ([m[1;36mHEAD[m[33m)[m feats: se modifican componentes para agregar visa de edicion de check list al clickear tarjeta, hasta ahora la prueba funciona
+* [33m07dc58e[m fix: Modificar props de task apra agregar checklist y attacment, y lograr ver la list de tareas al clickear sobre una card
+* [33mdfbb690[m Fix: index.css: Modificacion de estilo ya que no estaban en mobile first
+* [33mb4c96fb[m Fix: Forms: Modificacion de estilo ya que no estaban en mobile first
+* [33m1a5fc25[m Fix: Buttons: Modificacion de estilo ya que no estaban en mobile first
+* [33m894d829[m Fix: TaskFormModal: Modificacion de estilo ya que no estaban en mobile first
+* [33m867781f[m Fix: TaskCard: Modificacion de estilo ya que no estaban en mobile first
+* [33mb29f95a[m Fix: KanbanBoard: Modificacion de estilo ya que no estaban en mobile first
+* [33maf9563b[m Fix: BoardHeader: Modificacion de estilo ya que no estaban en mobile first
+* [33m33af8a8[m Fix: Top Navigation: Modificacion de estilo ya que no estaban en mobile first
+* [33m1ac0ec4[m feats: modifico componentes para implementar logica de tareas
+* [33m52a4646[m feats: Creacion de tareas ejemplos, para probar el dashboard
+* [33mb7f6ba7[m feats: Creo tipos de Tasks, inicia la logica para agregar tareas a Kanaban Board
+* [33m025db5d[m feats: Implementar Logica para subir andjuntos, vaciamos los arrays iniciales
+* [33m5c4fb79[m fix cambio de letra, se ve mejor
+* [33m96aeffe[m fix: Continuamos con separacion de archivos css, ya empieza a tomar forma
+* [33mcfa0368[m Modificacion de estructura de estilos para crear estilos que son compartidos e importarlos al index, para que index.css no quede gigante
+* [33m4f2d1d2[m modificacion del dasboard, TaskForm y BoardHeader para ver el formulario al clickear en new task
+* [33m4b84f1f[m feats: se crea TaskFormModal cmo orquestador y forma el formulario de creacion de tareas
+* [33mdd3065a[m feats: Creacion de Header del Formilario
+* [33m47f32a4[m feats: Creacion de Footer
+* [33mfc4fa64[m feats se crea selector de color, para un tipo de tarea o urgencia dado
+* [33mbd71f5c[m feats: Componente para elegir la fecha limite d ela tarea
+* [33mb38874a[m feats: se crea componente que adjunta archivos a tarea
+* [33m4a2339d[m feats: componente que maneja una check list de la tarea
+* [33m8b2628b[m docs: creacion de tipos para componentes del formulario
+* [33mafee3fa[m fix: ajustar estilos para el board, por alguna razon no se habian importados los estilos en los componentes, se importaron nuevamente
+* [33m1bb2011[m feats: Agrupo todo el dashboard en Dashboard.tsx, agrego estilos y los importo
+* [33m00128e5[m feats: Agrego stilos a top  navigation y los import en el componente
+* [33mebd21e2[m feats: Creo componente para TopNavigation section
