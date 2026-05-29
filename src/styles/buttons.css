@@ -1,0 +1,166 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-4);
+  height: 44px; /* 44px minimum touch target on mobile */
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+  white-space: nowrap;
+  outline: none;
+  text-decoration: none;
+  /* Prevent tap highlight flash on iOS */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* Active press feedback — works on both touch and mouse */
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Hover lift only on pointer devices */
+
+/* md: shrink back to original design height */
+@media (min-width: 768px) {
+  .btn {
+    height: 40px;
+  }
+}
+
+/* --- Primary --- */
+.btn--primary {
+  background: var(--color-indigo);
+  color: white;
+  border-color: var(--color-indigo);
+}
+
+@media (hover: hover) {
+  .btn--primary:hover {
+    background: var(--color-indigo-hover);
+    border-color: var(--color-indigo-hover);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  }
+}
+
+/* --- Secondary (ghost with indigo border) --- */
+.btn--secondary {
+  background: transparent;
+  color: var(--color-indigo);
+  border-color: var(--color-indigo);
+}
+
+@media (hover: hover) {
+  .btn--secondary:hover {
+    background: var(--color-indigo-light);
+  }
+}
+
+/* --- Ghost --- */
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+@media (hover: hover) {
+  .btn--ghost:hover {
+    background: var(--color-bg);
+    color: var(--color-navy);
+    border-color: var(--color-border-dark);
+  }
+}
+
+/* --- OAuth --- */
+.btn--oauth {
+  background: var(--color-surface);
+  color: var(--color-navy);
+  border-color: var(--color-border);
+  font-weight: 500;
+  box-shadow: var(--shadow-subtle);
+}
+
+@media (hover: hover) {
+  .btn--oauth:hover {
+    border-color: var(--color-border-dark);
+    box-shadow: var(--shadow-medium);
+    background: var(--color-bg);
+  }
+}
+
+/* --- Destructive --- */
+.btn--destructive {
+  background: var(--color-danger);
+  color: white;
+  border-color: var(--color-danger);
+}
+
+@media (hover: hover) {
+  .btn--destructive:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+}
+
+.btn--ghost.btn--destructive {
+  background: transparent;
+  color: var(--color-danger);
+  border-color: var(--color-border);
+}
+
+@media (hover: hover) {
+  .btn--ghost.btn--destructive:hover {
+    background: var(--color-danger-bg);
+    border-color: var(--color-danger);
+  }
+}
+
+/* --- Size Modifiers --- */
+.btn--full {
+  width: 100%;
+}
+
+/* sm: still touch-friendly on mobile (40px), shrinks at md */
+.btn--sm {
+  height: 40px;
+  font-size: var(--font-size-xs);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+  .btn--sm {
+    height: 34px;
+  }
+}
+
+/* xs: minimum usable on mobile (36px), shrinks at md */
+.btn--xs {
+  height: 36px;
+  font-size: var(--font-size-xs);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 768px) {
+  .btn--xs {
+    height: 28px;
+    padding: 0 var(--space-2);
+  }
+}

@@ -1,3 +1,4 @@
+import "./TaskCard.css";
 import { Avatar } from "../../../avatar";
 import {
   ClockIcon,
@@ -23,6 +24,7 @@ export const TaskCard = ({
   commentCount,
   overdue = false,
   done = false,
+  onClick,
 }: TaskCardProps) => {
   const cardClass = [
     "task-card",
@@ -33,7 +35,11 @@ export const TaskCard = ({
     .join(" ");
 
   return (
-    <article className={cardClass} aria-label={`Task: ${title}`}>
+    <article
+      className={cardClass}
+      aria-label={`Task: ${title}`}
+      onClick={onClick}
+    >
       <header className="task-card__header">
         <TaskBadge color={badge.color} label={badge.label} />
         <button

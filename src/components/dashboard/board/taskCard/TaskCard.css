@@ -15,28 +15,63 @@
   position: relative;
 }
 
-.task-card:hover {
-  box-shadow: var(--shadow-medium);
-  border-color: var(--color-border-dark);
-  transform: translateY(-2px);
+/* No hover lift on touch devices */
+@media (hover: hover) {
+  .task-card:hover {
+    box-shadow: var(--shadow-medium);
+    border-color: var(--color-border-dark);
+    transform: translateY(-2px);
+  }
 }
 
-/* Done modifier */
+/* Menu button always visible on touch (no hover) */
+.task-card__menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; /* Larger tap target */
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  opacity: 1; /* Always visible on mobile */
+  transition:
+    opacity var(--transition-fast),
+    background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.task-card__menu-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-navy);
+}
+
+/* On pointer devices: hide until hover */
+@media (hover: hover) {
+  .task-card__menu-btn {
+    opacity: 0;
+    width: 24px;
+    height: 24px;
+  }
+
+  .task-card:hover .task-card__menu-btn {
+    opacity: 1;
+  }
+}
+
 .task-card--done {
   opacity: 0.72;
 }
-
 .task-card--done:hover {
   opacity: 1;
 }
 
-/* Overdue modifier */
 .task-card--overdue {
   border-color: rgba(239, 68, 68, 0.2);
   background: #fffbfb;
 }
 
-/* --- Card Header --- */
 .task-card__header {
   display: flex;
   align-items: center;
@@ -44,7 +79,6 @@
   gap: var(--space-2);
 }
 
-/* --- Label Badge --- */
 .task-card__badge {
   display: inline-flex;
   align-items: center;
@@ -81,34 +115,6 @@
   color: var(--badge-slate-text);
 }
 
-/* --- Three-dot Menu Button --- */
-.task-card__menu-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  opacity: 0;
-  transition:
-    opacity var(--transition-fast),
-    background var(--transition-fast);
-  flex-shrink: 0;
-}
-
-.task-card:hover .task-card__menu-btn {
-  opacity: 1;
-}
-
-.task-card__menu-btn:hover {
-  background: var(--color-bg);
-  color: var(--color-navy);
-}
-
-/* --- Card Body --- */
 .task-card__body {
   display: flex;
   flex-direction: column;
@@ -137,7 +143,6 @@
   overflow: hidden;
 }
 
-/* --- Deadline Row --- */
 .task-card__deadline {
   display: flex;
   align-items: center;
@@ -170,7 +175,6 @@
   margin-left: var(--space-1);
 }
 
-/* --- Progress Bar --- */
 .task-card__progress {
   display: flex;
   align-items: center;
@@ -208,7 +212,6 @@
   text-align: right;
 }
 
-/* --- Card Footer --- */
 .task-card__footer {
   display: flex;
   align-items: center;
@@ -225,12 +228,20 @@
   font-weight: 500;
 }
 
-/* --- Preview grid (TaskCard standalone page) --- */
 .task-card-preview-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 340px));
-  gap: var(--space-5);
-  justify-content: center;
+  grid-template-columns: 1fr; /* Single column on mobile */
+  gap: var(--space-4);
   max-width: 1100px;
-  margin: var(--space-8) auto 0;
+  margin: var(--space-6) auto 0;
+  padding: 0 var(--space-4);
+}
+
+@media (min-width: 480px) {
+  .task-card-preview-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 340px));
+    justify-content: center;
+    margin-top: var(--space-8);
+    padding: 0;
+  }
 }
