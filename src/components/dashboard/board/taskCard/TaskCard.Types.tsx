@@ -22,6 +22,7 @@ export interface TaskCardProps {
   commentCount?: number;
   overdue?: boolean;
   done?: boolean;
+  onClick?: () => void;
 }
 
 export type ColumnId = "todo" | "in-progress" | "done" | "backlog";

@@ -11,7 +11,9 @@ import TaskFormModal from "../../taskForm/TaskFormModal";
 
 export const DashboardPage = () => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showModal, setShowModal] = useState(false);
+  console.log("SELECTED TASK", selectedTask);
 
   const handleCreateTask = (data: TaskFormData) => {
     const newTask: Task = {
@@ -39,6 +41,11 @@ export const DashboardPage = () => {
 
     setTasks((prev) => [...prev, newTask]);
   };
+  const openTask = (task: Task) => {
+    console.log("TASK CLICKED:", task);
+
+    setSelectedTask(task);
+  };
 
   return (
     <div className="dashboard">
@@ -46,7 +53,27 @@ export const DashboardPage = () => {
       <main className="dashboard__main" aria-label="Project Board">
         <BoardHeader onNewTask={() => setShowModal(true)} />
 
-        <KanbanBoard tasks={tasks} />
+        <KanbanBoard tasks={tasks} onTaskClick={openTask} />
+        {selectedTask && (
+          <div
+            style={{
+              position: "fixed",
+              top: 20,
+              right: 20,
+              background: "white",
+              padding: "20px",
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              zIndex: 9999,
+            }}
+          >
+            <h3>{selectedTask.title}</h3>
+
+            <p>{selectedTask.description}</p>
+
+            <button onClick={() => setSelectedTask(null)}>Close</button>
+          </div>
+        )}
       </main>
 
       {showModal && (

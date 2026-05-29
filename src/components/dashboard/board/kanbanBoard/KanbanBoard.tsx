@@ -8,9 +8,10 @@ import { KanbanColumn } from "./KanbanColumn";
 // ======= NUEVO: recibe tasks como prop =======
 interface KanbanBoardProps {
   tasks: Task[];
+  onTaskClick: (task: Task) => void;
 }
 
-export const KanbanBoard = ({ tasks }: KanbanBoardProps) => {
+export const KanbanBoard = ({ tasks, onTaskClick }: KanbanBoardProps) => {
   // ======= NUEVO: filtra las tareas por columna =======
   const todo = tasks.filter((t) => t.columnId === "todo");
   const inProgress = tasks.filter((t) => t.columnId === "in-progress");
@@ -26,7 +27,7 @@ export const KanbanBoard = ({ tasks }: KanbanBoardProps) => {
           {/* ======= NUEVO: renderiza dinámico en lugar de hardcodeado ======= */}
           {todo.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} />
+              <TaskCard {...task} onClick={() => onTaskClick(task)} />
             </li>
           ))}
           {/* ======= FIN NUEVO ======= */}
@@ -40,7 +41,7 @@ export const KanbanBoard = ({ tasks }: KanbanBoardProps) => {
         >
           {inProgress.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} />
+              <TaskCard {...task} onClick={() => onTaskClick(task)} />
             </li>
           ))}
         </KanbanColumn>
@@ -53,7 +54,7 @@ export const KanbanBoard = ({ tasks }: KanbanBoardProps) => {
         >
           {done.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} done />
+              <TaskCard {...task} done onClick={() => onTaskClick(task)} />
             </li>
           ))}
         </KanbanColumn>
@@ -61,7 +62,7 @@ export const KanbanBoard = ({ tasks }: KanbanBoardProps) => {
         <KanbanColumn title="Backlog" count={backlog.length} accent="amber">
           {backlog.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} />
+              <TaskCard {...task} onClick={() => onTaskClick(task)} />
             </li>
           ))}
         </KanbanColumn>
