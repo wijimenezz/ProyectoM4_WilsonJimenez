@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Logo } from "../../components/shared/Logo";
-import { EmailIcon } from "../../components/shared/icons";
+import { Logo } from "../../shared/Logo";
+import { EmailIcon } from "../../shared/icons";
 import { PasswordInput } from "../PasswordInput";
 import { AuthDivider } from "../AuthDivider";
 import { OAuthGroup } from "../OAuthGroup";

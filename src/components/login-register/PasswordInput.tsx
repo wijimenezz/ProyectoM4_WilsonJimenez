@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LockIcon } from "../components/shared/icons";
+import { LockIcon } from "../shared/icons";
 import { EyeIcon } from "lucide-react";
 
 interface PasswordInputProps {
