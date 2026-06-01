@@ -56,15 +56,15 @@ export const LoginPage = () => {
         <header className="auth-card__header">
           <Logo />
           <h1 className="auth-card__app-name" id="login-title">
-            SynTask
+            Task Manager
           </h1>
-          <p className="auth-card__tagline">Sign in to your workspace</p>
+          <p className="auth-card__tagline">Ingresa a tu Lugar de Trabajo</p>
         </header>
 
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label className="form-label" htmlFor="login-email">
-              Email address
+              Correo Electrónico
             </label>
             <div className="input-wrapper">
               <span className="input-wrapper__icon" aria-hidden="true">
@@ -87,10 +87,10 @@ export const LoginPage = () => {
           <div className="form-group">
             <div className="form-label-row">
               <label className="form-label" htmlFor="login-password">
-                Password
+                Contraseña
               </label>
               <a className="form-label-row__link" href="#forgot-password">
-                Forgot password?
+                Olvidaste tu Contraseña?
               </a>
             </div>
             <PasswordInput
@@ -113,7 +113,7 @@ export const LoginPage = () => {
                 onChange={(e) => setRemember(e.target.checked)}
               />
               <span className="checkbox-custom" aria-hidden="true" />
-              <span className="checkbox-text">Remember me for 30 days</span>
+              <span className="checkbox-text">Recuerdame por 30 Días</span>
             </label>
           </div>
 
@@ -137,9 +137,9 @@ export const LoginPage = () => {
 
         <footer className="auth-card__footer">
           <p className="auth-card__footer-text">
-            Don't have an account?{" "}
+            No tienes una Cuenta?{" "}
             <Link className="auth-card__footer-link" to="/register">
-              Create one for free
+              Crea una Cuenta
             </Link>
           </p>
         </footer>
