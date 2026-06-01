@@ -1,17 +1,29 @@
+// src/features/auth/RegisterPage/RegisterPage.tsx
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "../../shared/Logo";
 import { EmailIcon } from "../../shared/icons";
 import { PasswordInput } from "../PasswordInput";
 import { AuthDivider } from "../AuthDivider";
 import { OAuthGroup } from "../OAuthGroup";
+import {
+  loginWithGoogle,
+  registerUser,
+} from "../../../features/auth/AuthService";
+import { getAuthErrorMessage } from "../../../features/auth/AuthErrors";
 
 export const RegisterPage = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    password: "",
+    confirmPassword: "",
     terms: false,
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -19,6 +31,40 @@ export const RegisterPage = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (form.password !== form.confirmPassword) {
+      setError("Las contraseñas no coinciden.");
+      return;
+    }
+    if (!form.terms) {
+      setError("Debes aceptar los términos para continuar.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await registerUser(form.email, form.password);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(getAuthErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setError("");
+    try {
+      await loginWithGoogle();
+      navigate("/dashboard");
+    } catch (err) {
+      setError(getAuthErrorMessage(err));
+    }
   };
 
   return (
@@ -42,11 +88,8 @@ export const RegisterPage = () => {
           </h1>
           <p className="auth-card__tagline">Create your free account</p>
         </header>
-        <form
-          className="auth-form"
-          onSubmit={(e) => e.preventDefault()}
-          noValidate
-        >
+
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-row form-row--two-col">
             <div className="form-group">
               <label className="form-label" htmlFor="reg-first-name">
@@ -81,6 +124,7 @@ export const RegisterPage = () => {
               />
             </div>
           </div>
+
           <div className="form-group">
             <label className="form-label" htmlFor="reg-email">
               Work email
@@ -102,6 +146,7 @@ export const RegisterPage = () => {
               />
             </div>
           </div>
+
           <div className="form-group">
             <label className="form-label" htmlFor="reg-password">
               Password
@@ -111,20 +156,26 @@ export const RegisterPage = () => {
               name="password"
               placeholder="Min. 8 characters"
               autoComplete="new-password"
+              value={form.password}
+              onChange={handleChange}
             />
           </div>
+
           <div className="form-group">
             <label className="form-label" htmlFor="reg-confirm-password">
               Confirm password
             </label>
             <PasswordInput
               id="reg-confirm-password"
-              name="confirm_password"
+              name="confirmPassword"
               placeholder="Re-enter your password"
               autoComplete="new-password"
               ariaLabel="Toggle confirm password visibility"
+              value={form.confirmPassword}
+              onChange={handleChange}
             />
           </div>
+
           <div className="form-group form-group--checkbox">
             <label className="checkbox-label" htmlFor="reg-terms">
               <input
@@ -149,18 +200,31 @@ export const RegisterPage = () => {
               </span>
             </label>
           </div>
-          <button className="btn btn--primary btn--full" type="submit">
-            Create Account
+
+          {error && (
+            <p role="alert" className="auth-error">
+              {error}
+            </p>
+          )}
+
+          <button
+            className="btn btn--primary btn--full"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
+
         <AuthDivider />
-        <OAuthGroup label="Sign up" />
+        <OAuthGroup label="Sign up" onGoogleClick={handleGoogle} />
+
         <footer className="auth-card__footer">
           <p className="auth-card__footer-text">
             Already have an account?{" "}
-            <a className="auth-card__footer-link" href="#preview-login">
+            <Link className="auth-card__footer-link" to="/login">
               Sign in
-            </a>
+            </Link>
           </p>
         </footer>
       </article>
