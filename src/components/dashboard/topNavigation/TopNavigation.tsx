@@ -3,8 +3,18 @@ import { Avatar } from "../../avatar";
 import "./Topnavigation.css";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../../features/auth/AuthService";
+import { useAuth } from "../../../features/auth/Authenticator";
+import {
+  getUserDisplayName,
+  getUserInitials,
+} from "../../../utils/UserHelpers";
 
 export const TopNavigation = () => {
+  const { user } = useAuth();
+
+  const displayName = getUserDisplayName(user);
+  const initials = getUserInitials(user);
+
   const [showMenu, setShowMenu] = useState(false);
 
   const navigate = useNavigate();
@@ -151,11 +161,13 @@ export const TopNavigation = () => {
           aria-expanded={showMenu}
           onClick={() => setShowMenu((prev) => !prev)}
         >
-          <Avatar initials="JS" size="md" />
+          <Avatar initials={initials} size="md" />
 
           <div className="top-nav__user-info">
-            <span className="top-nav__user-name">Jane Smith</span>
-            <span className="top-nav__user-role">Product Designer</span>
+            <span className="top-nav__user-name">{displayName}</span>
+            <span className="top-nav__user-role">
+              {user?.email ?? "No email"}
+            </span>
           </div>
 
           <svg
