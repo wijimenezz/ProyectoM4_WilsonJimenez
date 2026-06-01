@@ -1,9 +1,44 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar } from "../../avatar";
 import "./Topnavigation.css";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../../features/auth/AuthService";
 
 export const TopNavigation = () => {
   const [showMenu, setShowMenu] = useState(false);
+
+  const navigate = useNavigate();
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      setShowMenu(false);
+
+      await logoutUser();
+
+      navigate("/login");
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+    }
+  };
 
   return (
     <header className="top-nav" role="banner">
@@ -27,6 +62,7 @@ export const TopNavigation = () => {
             <circle cx="26" cy="12" r="3" fill="#818CF8" />
           </svg>
         </div>
+
         <span className="top-nav__app-name">SynTask</span>
       </div>
 
@@ -38,135 +74,31 @@ export const TopNavigation = () => {
               href="#"
               aria-current="page"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <rect
-                  x="1"
-                  y="1"
-                  width="6"
-                  height="6"
-                  rx="1"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                />
-                <rect
-                  x="9"
-                  y="1"
-                  width="6"
-                  height="6"
-                  rx="1"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                />
-                <rect
-                  x="1"
-                  y="9"
-                  width="6"
-                  height="6"
-                  rx="1"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                />
-                <rect
-                  x="9"
-                  y="9"
-                  width="6"
-                  height="6"
-                  rx="1"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                />
-              </svg>
               Dashboard
             </a>
           </li>
+
           <li>
             <a className="top-nav__link" href="#preview-projects">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M2 3h12v10H2z"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M5 3V1M11 3V1"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinecap="round"
-                />
-                <path d="M2 6h12" stroke="currentColor" strokeWidth="1.3" />
-              </svg>
               Projects
             </a>
           </li>
+
           <li>
             <a className="top-nav__link" href="#">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="8"
-                  cy="5"
-                  r="3"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                />
-                <path
-                  d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinecap="round"
-                />
-              </svg>
               Team
             </a>
           </li>
+
           <li>
             <a className="top-nav__link" href="#">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M8 1v2M8 13v2M3.22 3.22l1.42 1.42M11.36 11.36l1.42 1.42M1 8h2M13 8h2M3.22 12.78l1.42-1.42M11.36 4.64l1.42-1.42"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinecap="round"
-                />
-                <circle
-                  cx="8"
-                  cy="8"
-                  r="3"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                />
-              </svg>
               Analytics
             </a>
           </li>
         </ul>
       </nav>
 
-      <div className="top-nav__actions">
+      <div className="top-nav__actions" ref={dropdownRef}>
         <button
           className="top-nav__icon-btn"
           type="button"
@@ -187,6 +119,7 @@ export const TopNavigation = () => {
             />
             <path d="M7 12.5a2 2 0 004 0" stroke="#0F172A" strokeWidth="1.3" />
           </svg>
+
           <span className="top-nav__badge" aria-hidden="true">
             3
           </span>
@@ -215,13 +148,16 @@ export const TopNavigation = () => {
           type="button"
           aria-label="User account menu"
           aria-haspopup="true"
-          onClick={() => setShowMenu(!showMenu)}
+          aria-expanded={showMenu}
+          onClick={() => setShowMenu((prev) => !prev)}
         >
           <Avatar initials="JS" size="md" />
+
           <div className="top-nav__user-info">
             <span className="top-nav__user-name">Jane Smith</span>
             <span className="top-nav__user-role">Product Designer</span>
           </div>
+
           <svg
             width="14"
             height="14"
@@ -238,13 +174,18 @@ export const TopNavigation = () => {
             />
           </svg>
         </button>
+
         {showMenu && (
           <div className="top-nav__dropdown">
             <button className="top-nav__dropdown-item" type="button">
               Edit Profile
             </button>
 
-            <button className="top-nav__dropdown-item" type="button">
+            <button
+              className="top-nav__dropdown-item top-nav__dropdown-item--danger"
+              type="button"
+              onClick={handleLogout}
+            >
               Logout
             </button>
           </div>
