@@ -1,13 +1,46 @@
+// src/features/auth/loginPage/LoginPage.tsx
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "../../shared/Logo";
 import { EmailIcon } from "../../shared/icons";
 import { PasswordInput } from "../PasswordInput";
 import { AuthDivider } from "../AuthDivider";
 import { OAuthGroup } from "../OAuthGroup";
+import { loginUser, loginWithGoogle } from "../../../features/auth/AuthService";
+import { getAuthErrorMessage } from "../../../features/auth/AuthErrors";
+import type { FormEvent } from "react";
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await loginUser(email, password);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(getAuthErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setError("");
+    try {
+      await loginWithGoogle();
+      navigate("/dashboard");
+    } catch (err) {
+      setError(getAuthErrorMessage(err));
+    }
+  };
 
   return (
     <main className="auth-page" aria-label="Login Page">
@@ -27,11 +60,8 @@ export const LoginPage = () => {
           </h1>
           <p className="auth-card__tagline">Sign in to your workspace</p>
         </header>
-        <form
-          className="auth-form"
-          onSubmit={(e) => e.preventDefault()}
-          noValidate
-        >
+
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label className="form-label" htmlFor="login-email">
               Email address
@@ -53,6 +83,7 @@ export const LoginPage = () => {
               />
             </div>
           </div>
+
           <div className="form-group">
             <div className="form-label-row">
               <label className="form-label" htmlFor="login-password">
@@ -66,8 +97,11 @@ export const LoginPage = () => {
               id="login-password"
               name="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <div className="form-group form-group--checkbox">
             <label className="checkbox-label" htmlFor="login-remember">
               <input
@@ -82,18 +116,31 @@ export const LoginPage = () => {
               <span className="checkbox-text">Remember me for 30 days</span>
             </label>
           </div>
-          <button className="btn btn--primary btn--full" type="submit">
-            Sign in to SynTask
+
+          {error && (
+            <p role="alert" className="auth-error">
+              {error}
+            </p>
+          )}
+
+          <button
+            className="btn btn--primary btn--full"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Signing in..." : "Sign in to SynTask"}
           </button>
         </form>
+
         <AuthDivider />
-        <OAuthGroup label="Sign in" />
+        <OAuthGroup label="Sign in" onGoogleClick={handleGoogle} />
+
         <footer className="auth-card__footer">
           <p className="auth-card__footer-text">
             Don't have an account?{" "}
-            <a className="auth-card__footer-link" href="#preview-register">
+            <Link className="auth-card__footer-link" to="/register">
               Create one for free
-            </a>
+            </Link>
           </p>
         </footer>
       </article>

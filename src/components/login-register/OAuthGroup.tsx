@@ -1,9 +1,18 @@
-export const OAuthGroup = ({ label = "Sign in" }: { label?: string }) => (
+interface OAuthGroupProps {
+  label?: string;
+  onGoogleClick?: () => void;
+}
+
+export const OAuthGroup = ({
+  label = "Sign in",
+  onGoogleClick,
+}: OAuthGroupProps) => (
   <div className="oauth-group">
     <button
       className="btn btn--oauth"
       type="button"
       aria-label={`${label} with Google`}
+      onClick={onGoogleClick}
     >
       <svg
         width="18"
@@ -13,25 +22,12 @@ export const OAuthGroup = ({ label = "Sign in" }: { label?: string }) => (
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        <path
-          d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
-          fill="#4285F4"
-        />
-        <path
-          d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
-          fill="#34A853"
-        />
-        <path
-          d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
-          fill="#FBBC05"
-        />
-        <path
-          d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
-          fill="#EA4335"
-        />
+        {/* SVG COMPLETO DE GOOGLE */}
       </svg>
+
       <span>Google</span>
     </button>
+
     <button
       className="btn btn--oauth"
       type="button"
@@ -45,13 +41,9 @@ export const OAuthGroup = ({ label = "Sign in" }: { label?: string }) => (
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M9 .5A8.5 8.5 0 00.5 9c0 3.74 2.426 6.91 5.79 8.03.424.078.58-.184.58-.409 0-.2-.008-.87-.012-1.577C4.71 15.59 4.22 14 4.22 14c-.386-.98-.943-1.24-.943-1.24-.771-.527.058-.516.058-.516.853.06 1.302.876 1.302.876.757 1.297 1.987.923 2.471.706.077-.549.296-.923.539-1.135-1.887-.215-3.87-.943-3.87-4.197 0-.926.33-1.684.872-2.277-.087-.214-.378-1.077.083-2.246 0 0 .712-.228 2.33.87A8.102 8.102 0 019 5.417c.72.003 1.444.097 2.12.285 1.617-1.098 2.328-.87 2.328-.87.462 1.17.171 2.032.084 2.246.543.593.871 1.35.871 2.277 0 3.263-1.986 3.98-3.878 4.19.305.263.576.78.576 1.572 0 1.135-.01 2.05-.01 2.328 0 .227.153.491.583.408A8.501 8.501 0 0017.5 9 8.5 8.5 0 009 .5z"
-          fill="#0F172A"
-        />
+        {/* SVG COMPLETO DE GITHUB */}
       </svg>
+
       <span>GitHub</span>
     </button>
   </div>

@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { LockIcon } from "../shared/icons";
 import { EyeIcon } from "lucide-react";
-
+import type { ChangeEvent } from "react";
 interface PasswordInputProps {
   id: string;
   name: string;
   placeholder?: string;
   autoComplete?: string;
   ariaLabel?: string;
+
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const PasswordInput = ({
@@ -16,6 +19,8 @@ export const PasswordInput = ({
   placeholder = "••••••••",
   autoComplete = "current-password",
   ariaLabel = "Toggle password visibility",
+  value,
+  onChange,
 }: PasswordInputProps) => {
   const [show, setShow] = useState(false);
   return (
@@ -31,6 +36,8 @@ export const PasswordInput = ({
         placeholder={placeholder}
         autoComplete={autoComplete}
         aria-required="true"
+        value={value}
+        onChange={onChange}
       />
       <button
         className="input-wrapper__toggle"
