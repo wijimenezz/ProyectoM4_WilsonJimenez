@@ -9,17 +9,35 @@ import {
   getUserInitials,
 } from "../../../utils/UserHelpers";
 
-export const TopNavigation = () => {
+type NotificationItem = {
+  id: string;
+  title: string;
+  deadline: string;
+  daysLeft: number;
+  overdue: boolean;
+};
+
+interface TopNavigationProps {
+  notifications?: NotificationItem[];
+  onNotificationClick?: (id: string) => void;
+}
+
+export const TopNavigation = ({
+  notifications = [],
+  onNotificationClick,
+}: TopNavigationProps) => {
   const { user } = useAuth();
 
   const displayName = getUserDisplayName(user);
   const initials = getUserInitials(user);
 
   const [showMenu, setShowMenu] = useState(false);
+  const [showNotif, setShowNotif] = useState(false);
 
   const navigate = useNavigate();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -28,6 +46,9 @@ export const TopNavigation = () => {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setShowMenu(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setShowNotif(false);
       }
     };
 
@@ -108,32 +129,66 @@ export const TopNavigation = () => {
         </ul>
       </nav>
 
-      <div className="top-nav__actions" ref={dropdownRef}>
-        <button
-          className="top-nav__icon-btn"
-          type="button"
-          aria-label="Notifications (3 unread)"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            aria-hidden="true"
+      <div className="top-nav__actions">
+        <div ref={notifRef} className="top-nav__notif">
+          <button
+            className="top-nav__icon-btn"
+            type="button"
+            aria-label={`Notifications (${notifications.length} unread)`}
+            onClick={() => setShowNotif((s) => !s)}
           >
-            <path
-              d="M9 1.5A5.5 5.5 0 003.5 7v3.5L2 12.5h14l-1.5-2V7A5.5 5.5 0 009 1.5z"
-              stroke="#0F172A"
-              strokeWidth="1.3"
-              strokeLinejoin="round"
-            />
-            <path d="M7 12.5a2 2 0 004 0" stroke="#0F172A" strokeWidth="1.3" />
-          </svg>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M9 1.5A5.5 5.5 0 003.5 7v3.5L2 12.5h14l-1.5-2V7A5.5 5.5 0 009 1.5z"
+                stroke="#0F172A"
+                strokeWidth="1.3"
+                strokeLinejoin="round"
+              />
+              <path d="M7 12.5a2 2 0 004 0" stroke="#0F172A" strokeWidth="1.3" />
+            </svg>
 
-          <span className="top-nav__badge" aria-hidden="true">
-            3
-          </span>
-        </button>
+            {notifications.length > 0 && (
+              <span className="top-nav__badge" aria-hidden="true">
+                {notifications.length}
+              </span>
+            )}
+          </button>
+
+          {showNotif && (
+            <div className="top-nav__notif-dropdown">
+              {notifications.length === 0 ? (
+                <div className="top-nav__notif-empty">No notifications</div>
+              ) : (
+                notifications.map((n) => (
+                  <button
+                    key={n.id}
+                    className="top-nav__notif-item"
+                    type="button"
+                    onClick={() => {
+                      setShowNotif(false);
+                      onNotificationClick && onNotificationClick(n.id);
+                    }}
+                  >
+                    <div className="top-nav__notif-title">{n.title}</div>
+                    <div className="top-nav__notif-meta">
+                      {n.overdue
+                        ? `Overdue ${Math.abs(n.daysLeft)}d`
+                        : n.daysLeft === 0
+                        ? "Due today"
+                        : `Due in ${n.daysLeft}d`}
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </div>
 
         <button className="top-nav__icon-btn" type="button" aria-label="Search">
           <svg
