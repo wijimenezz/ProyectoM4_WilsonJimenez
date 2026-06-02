@@ -32,7 +32,7 @@ export async function createTask(
 export async function updateTask(
   uid: string,
   taskId: string,
-  changes: Partial<Omit<Task, "id">>,
+  changes: Partial<Omit<Task, "id" | "createdAt" | "updateAt">>,
 ) {
   const ref = doc(db, "users", uid, "tasks", taskId);
 
