@@ -47,7 +47,10 @@ export const TopNavigation = ({
       ) {
         setShowMenu(false);
       }
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+      if (
+        notifRef.current &&
+        !notifRef.current.contains(event.target as Node)
+      ) {
         setShowNotif(false);
       }
     };
@@ -150,7 +153,11 @@ export const TopNavigation = ({
                 strokeWidth="1.3"
                 strokeLinejoin="round"
               />
-              <path d="M7 12.5a2 2 0 004 0" stroke="#0F172A" strokeWidth="1.3" />
+              <path
+                d="M7 12.5a2 2 0 004 0"
+                stroke="#0F172A"
+                strokeWidth="1.3"
+              />
             </svg>
 
             {notifications.length > 0 && (
@@ -180,8 +187,8 @@ export const TopNavigation = ({
                       {n.overdue
                         ? `Overdue ${Math.abs(n.daysLeft)}d`
                         : n.daysLeft === 0
-                        ? "Due today"
-                        : `Due in ${n.daysLeft}d`}
+                          ? "Expira Hoy"
+                          : `Expira en ${n.daysLeft}d`}
                     </div>
                   </button>
                 ))
