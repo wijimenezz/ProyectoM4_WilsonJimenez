@@ -68,4 +68,5 @@ export interface Task {
   columnId: ColumnId;
   done?: boolean;
   createdAt?: number;
+  updatedAt?: number;
 }
