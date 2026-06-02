@@ -74,13 +74,25 @@ export function useTasks(uid: string) {
 
   // Actualizar checklist y recalcular progreso
   const updateChecklist = (taskId: string, checklist: ChecklistItem[]) => {
+    const doneCount = checklist.filter((item) => item.done).length;
     const progress =
       checklist.length > 0
-        ? Math.round(
-            (checklist.filter((i) => i.done).length / checklist.length) * 100,
-          )
+        ? Math.round((doneCount / checklist.length) * 100)
         : 0;
-    return editTask(taskId, { checklist, progress });
+
+    const isComplete = checklist.length > 0 && doneCount === checklist.length;
+    const columnId = isComplete
+      ? "done"
+      : progress > 0
+        ? "in-progress"
+        : "todo";
+
+    return editTask(taskId, {
+      checklist,
+      progress,
+      columnId,
+      done: isComplete,
+    });
   };
 
   // Tareas agrupadas por columna — listas para el board
