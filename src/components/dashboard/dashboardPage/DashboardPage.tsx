@@ -51,6 +51,17 @@ export const DashboardPage = () => {
           )
         : 0;
 
+    const isComplete =
+      data.checklist.length > 0 &&
+      data.checklist.filter((item) => item.done).length ===
+        data.checklist.length;
+
+    const columnId = isComplete
+      ? "done"
+      : progress > 0
+        ? "in-progress"
+        : "todo";
+
     if (!taskToEdit) {
       await addTask({
         title: data.title,
@@ -64,7 +75,8 @@ export const DashboardPage = () => {
         assignees: [],
         checklist: data.checklist,
         attachments: data.attachments,
-        columnId: "todo",
+        columnId,
+        done: isComplete,
       });
       return;
     }
@@ -80,6 +92,8 @@ export const DashboardPage = () => {
       attachments: data.attachments,
       checklist: data.checklist,
       progress,
+      columnId,
+      done: isComplete,
     });
     setTaskToEdit(null);
   };
