@@ -1,13 +1,16 @@
-import { PlusIcon } from "../../shared/icons";
+import { EmailIcon, PlusIcon } from "../../shared/icons";
 import "./BoardHeader.css";
 
-// ← 1. definir la interfaz del prop
 interface BoardHeaderProps {
   onNewTask: () => void;
+  onSendEmails?: () => void;
 }
 
-// ← 2. recibir el prop (ya no es () => sino ({ onNewTask }) =>)
-export const BoardHeader = ({ onNewTask }: BoardHeaderProps) => (
+// ← 2. recibir el prop
+export const BoardHeader = ({
+  onNewTask,
+  onSendEmails = () => {},
+}: BoardHeaderProps) => (
   <div className="board-header">
     <div className="board-header__title-area">
       <div className="board-header__breadcrumb" aria-label="Breadcrumb">
@@ -115,7 +118,15 @@ export const BoardHeader = ({ onNewTask }: BoardHeaderProps) => (
         Add Column
       </button>
 
-      {/* ← 3. onClick conectado al prop */}
+      <button
+        className="btn btn--primary btn--sm"
+        type="button"
+        onClick={onSendEmails}
+      >
+        <EmailIcon color="white" strokeWidth={1.8} />
+        Send Email
+      </button>
+
       <button
         className="btn btn--primary btn--sm"
         type="button"

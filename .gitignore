@@ -24,3 +24,5 @@ miapp.tsx
 *.sln
 *.sw?
 .env
+
+.vercel

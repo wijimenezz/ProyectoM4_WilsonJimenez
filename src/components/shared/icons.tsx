@@ -20,9 +20,15 @@ import {
 // Fixed icons — no props needed, always the same size/color
 // ============================================================
 
-export const EmailIcon = () => (
-  <Mail size={16} color="#64748B" strokeWidth={1.2} />
-);
+export const EmailIcon = ({
+  size = 16,
+  color = "#64748B",
+  strokeWidth = 1.2,
+}: {
+  size?: number;
+  color?: string;
+  strokeWidth?: number;
+}) => <Mail size={size} color={color} strokeWidth={strokeWidth} />;
 
 export const LockIcon = () => (
   <Lock size={16} color="#64748B" strokeWidth={1.2} />

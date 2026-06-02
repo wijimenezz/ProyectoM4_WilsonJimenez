@@ -41,6 +41,55 @@ export const DashboardPage = () => {
     setShowTaskModal(true);
   };
 
+  const handleSendEmails = async () => {
+    if (!user?.email) {
+      alert("No user email available to send notifications.");
+      return;
+    }
+
+    const taskSummary = tasks
+      .map((task) => {
+        const status = task.done
+          ? "Completada"
+          : task.columnId === "in-progress"
+          ? "En progreso"
+          : "Por hacer";
+        const deadline = task.deadline
+          ? `Fecha límite: ${task.deadline}`
+          : "Sin fecha límite";
+        return `- ${task.title} (${status}) — ${deadline}`;
+      })
+      .join("\n");
+
+    const summary = `Resumen de tareas (${tasks.length}):\n\n${taskSummary}`;
+
+    try {
+      const response = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: user.email,
+          summary,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || result.message || "Error sending email");
+      }
+
+      alert("Email enviado correctamente a " + user.email);
+    } catch (error: any) {
+      console.error("Email send failed", error);
+      alert(
+        "No se pudo enviar el email. Revise la consola o la configuración del servidor.",
+      );
+    }
+  };
+
   // --- Notifications: tasks due within threshold or overdue ---
   const NOTIF_THRESHOLD_DAYS = 1; // 1 day to deadline
 
@@ -203,7 +252,10 @@ export const DashboardPage = () => {
       />
 
       <main className="dashboard__main" aria-label="Project Board">
-        <BoardHeader onNewTask={openCreateModal} />
+        <BoardHeader
+          onNewTask={openCreateModal}
+          onSendEmails={handleSendEmails}
+        />
 
         {error && (
           <p
