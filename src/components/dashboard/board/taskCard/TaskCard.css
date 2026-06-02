@@ -79,6 +79,45 @@
   gap: var(--space-2);
 }
 
+.task-card__menu {
+  position: relative;
+}
+
+.task-card__menu-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 180px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-large);
+  padding: 0.25rem 0;
+  z-index: 10;
+}
+
+.task-card__menu-item {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.task-card__menu-item:hover,
+.task-card__menu-item:focus {
+  background: var(--color-bg);
+  color: var(--color-navy);
+}
+
+.task-card__menu-item:focus {
+  outline: none;
+}
+
 .task-card__badge {
   display: inline-flex;
   align-items: center;

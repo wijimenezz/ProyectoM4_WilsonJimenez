@@ -70,3 +70,23 @@ export interface Task {
   createdAt?: number;
   updatedAt?: number;
 }
+
+export interface TaskCardProps {
+  title: string;
+  description: string;
+  badge: {
+    label: string;
+    color: BadgeColor;
+  };
+  deadline?: string;
+  progress: number;
+  progressVariant?: "default" | "success" | "danger";
+  assignees: Array<{ initials: string; label: string }>;
+  commentCount?: number;
+  overdue?: boolean;
+  done?: boolean;
+  onClick?: () => void;
+  onEditTask?: () => void;
+  onDeleteTask?: () => void;
+  onToggleCompleteTask?: () => void;
+}

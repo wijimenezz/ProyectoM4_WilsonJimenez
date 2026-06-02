@@ -17,7 +17,7 @@ export const KanbanBoard = ({ tasks, onTaskClick }: KanbanBoardProps) => {
   const todo = tasks.filter((t) => t.columnId === "todo");
   const inProgress = tasks.filter((t) => t.columnId === "in-progress");
   const done = tasks.filter((t) => t.columnId === "done");
-  const backlog = tasks.filter((t) => t.columnId === "backlog");
+  const backlog = tasks.filter((t) => t.columnId === "in-review");
   // ======= FIN NUEVO =======
 
   return (

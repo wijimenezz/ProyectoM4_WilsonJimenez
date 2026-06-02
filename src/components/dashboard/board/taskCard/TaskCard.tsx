@@ -1,3 +1,4 @@
+import { useEffect, useId, useRef, useState } from "react";
 import "./TaskCard.css";
 import { Avatar } from "../../../avatar";
 import {
@@ -10,7 +11,6 @@ import type {
   BadgeColor,
   TaskCardProps,
 } from "../../../../types/TaskCard.Types";
-import "./TaskCard.css";
 
 const TaskBadge = ({ color, label }: { color: BadgeColor; label: string }) => (
   <span className={`task-card__badge task-card__badge--${color}`}>{label}</span>
@@ -28,7 +28,30 @@ export const TaskCard = ({
   overdue = false,
   done = false,
   onClick,
+  onEditTask,
+  onDeleteTask,
+  onToggleCompleteTask,
 }: TaskCardProps) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        menuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsideClick);
+    return () =>
+      document.removeEventListener("pointerdown", handleOutsideClick);
+  }, [menuOpen]);
+
   const cardClass = [
     "task-card",
     overdue ? "task-card--overdue" : "",
@@ -45,14 +68,63 @@ export const TaskCard = ({
     >
       <header className="task-card__header">
         <TaskBadge color={badge.color} label={badge.label} />
-        <button
-          className="task-card__menu-btn"
-          type="button"
-          aria-label="Task options menu"
-          aria-haspopup="true"
-        >
-          <DotsVerticalIcon size={14} />
-        </button>
+        <div className="task-card__menu" ref={menuRef}>
+          <button
+            className="task-card__menu-btn"
+            type="button"
+            aria-label="Task options menu"
+            aria-haspopup="true"
+            aria-expanded={menuOpen}
+            aria-controls={menuId}
+            onClick={(event) => {
+              event.stopPropagation();
+              setMenuOpen((open) => !open);
+            }}
+          >
+            <DotsVerticalIcon size={14} />
+          </button>
+
+          {menuOpen && (
+            <div className="task-card__menu-panel" role="menu" id={menuId}>
+              <button
+                type="button"
+                className="task-card__menu-item"
+                role="menuitem"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setMenuOpen(false);
+                  onEditTask?.();
+                }}
+              >
+                Editar tarea
+              </button>
+              <button
+                type="button"
+                className="task-card__menu-item"
+                role="menuitem"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setMenuOpen(false);
+                  onToggleCompleteTask?.();
+                }}
+              >
+                {done ? "Marcar como pendiente" : "Completar tarea"}
+              </button>
+              <button
+                type="button"
+                className="task-card__menu-item"
+                role="menuitem"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setMenuOpen(false);
+                  onDeleteTask?.();
+                }}
+              >
+                Eliminar tarea
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       <div className="task-card__body">

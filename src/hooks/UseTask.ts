@@ -10,6 +10,7 @@ import {
 import type { ChecklistItem, ColumnId, Task } from "../types/TaskCard.Types";
 
 export function useTasks(uid: string) {
+  console.log("UID recibido:", uid);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,8 +18,10 @@ export function useTasks(uid: string) {
   // Escucha cambios en tiempo real
   useEffect(() => {
     if (!uid) return;
+    console.log("Iniciando listener para:", uid);
 
     const unsub = subscribeTasks(uid, (data) => {
+      console.log("Tareas recibidas:", data);
       setTasks(data);
       setLoading(false);
     });
@@ -30,6 +33,8 @@ export function useTasks(uid: string) {
   const addTask = async (
     task: Omit<Task, "id" | "createdAt" | "updatedAt">,
   ) => {
+    console.log("Creando tarea:", task);
+
     try {
       await createTask(uid, task);
     } catch (e) {
@@ -43,9 +48,11 @@ export function useTasks(uid: string) {
     taskId: string,
     changes: Partial<Omit<Task, "id" | "createdAt" | "updateAt">>,
   ) => {
+    console.log("Actualizando:", taskId, changes);
     try {
       await updateTask(uid, taskId, changes);
     } catch (e) {
+      console.log("Eliminando:", taskId);
       setError("Error al actualizar la tarea");
       console.error(e);
     }

@@ -7,70 +7,69 @@ import { TopNavigation } from "../topNavigation/TopNavigation";
 import TaskFormModal from "../../taskForm/TaskFormModal";
 import ChecklistModal from "../../taskForm/CheckListModal";
 
-// Un solo import — ya no existe TypesTaskForm
 import type {
   Task,
   TaskFormData,
   ChecklistItem,
 } from "../../../types/TaskCard.Types";
-import { INITIAL_TASKS } from "../../../data/InitialTasks";
+import { useAuth } from "../../../features/auth/Authenticator";
+import { useTasks } from "../../../hooks/UseTask";
 
 export const DashboardPage = () => {
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const { user } = useAuth();
+  const { tasks, loading, error, addTask, removeTask, updateChecklist } =
+    useTasks(user!.uid);
+
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  // --- Crear tarea desde el formulario ---
-  const handleCreateTask = (data: TaskFormData) => {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
+  // CREATE — construye la Task y la manda a Firestore
+  const handleCreateTask = async (data: TaskFormData) => {
+    await addTask({
       title: data.title,
       description: data.description,
-
       badge: {
-        label: data.colorLabel, // antes era "Task" hardcodeado
-        color: data.color, // BadgeColor correcto
+        label: data.colorLabel,
+        color: data.color,
       },
-
       deadline: data.deadline || undefined,
       progress: 0,
       assignees: [],
       checklist: data.checklist,
       attachments: data.attachments,
       columnId: "todo",
-    };
-
-    setTasks((prev) => [...prev, newTask]);
+    });
   };
 
-  // --- Abrir tarea para editar checklist ---
-  const openTask = (task: Task) => {
-    setSelectedTask(task);
-  };
-
-  // --- Guardar checklist editado y recalcular progreso ---
-  const handleSaveChecklist = (updatedChecklist: ChecklistItem[]) => {
+  // UPDATE checklist + progreso
+  const handleSaveChecklist = async (updatedChecklist: ChecklistItem[]) => {
     if (!selectedTask) return;
-
-    const progress =
-      updatedChecklist.length > 0
-        ? Math.round(
-            (updatedChecklist.filter((i) => i.done).length /
-              updatedChecklist.length) *
-              100,
-          )
-        : 0;
-
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === selectedTask.id
-          ? { ...task, checklist: updatedChecklist, progress }
-          : task,
-      ),
-    );
-
+    await updateChecklist(selectedTask.id, updatedChecklist);
     setSelectedTask(null);
   };
+
+  // DELETE
+  const handleDeleteTask = async (taskId: string) => {
+    await removeTask(taskId);
+  };
+
+  if (loading) {
+    return (
+      <div className="dashboard">
+        <TopNavigation />
+        <main className="dashboard__main">
+          <p
+            style={{
+              padding: "var(--space-8)",
+              color: "var(--color-text-muted)",
+            }}
+          >
+            Loading tasks...
+          </p>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard">
@@ -79,7 +78,18 @@ export const DashboardPage = () => {
       <main className="dashboard__main" aria-label="Project Board">
         <BoardHeader onNewTask={() => setShowModal(true)} />
 
-        <KanbanBoard tasks={tasks} onTaskClick={openTask} />
+        {error && (
+          <p
+            style={{
+              color: "var(--color-danger)",
+              padding: "0 var(--space-6)",
+            }}
+          >
+            {error}
+          </p>
+        )}
+
+        <KanbanBoard tasks={tasks} onTaskClick={setSelectedTask} />
 
         {selectedTask && (
           <ChecklistModal
@@ -95,8 +105,8 @@ export const DashboardPage = () => {
       {showModal && (
         <TaskFormModal
           onClose={() => setShowModal(false)}
-          onSubmit={(data) => {
-            handleCreateTask(data);
+          onSubmit={async (data) => {
+            await handleCreateTask(data);
             setShowModal(false);
           }}
         />
