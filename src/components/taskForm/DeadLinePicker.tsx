@@ -1,4 +1,8 @@
 import { CalendarIcon } from "../shared/icons";
+const today = new Date();
+const localDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+  .toISOString()
+  .split("T")[0];
 
 <CalendarIcon />;
 
@@ -22,6 +26,7 @@ export const DeadlinePicker = ({ value, onChange }: DeadlinePickerProps) => (
         id="task-deadline"
         name="deadline"
         value={value}
+        min={localDate}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
