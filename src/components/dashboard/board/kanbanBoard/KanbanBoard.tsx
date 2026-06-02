@@ -2,7 +2,7 @@
 
 import "./KanbanBoard.css";
 import { TaskCard } from "../taskCard/TaskCard";
-import type { Task } from "../taskCard/TaskCard.Types";
+import type { Task } from "../../../../types/TaskCard.Types";
 import { KanbanColumn } from "./KanbanColumn";
 import "./KanbanBoard.css";
 

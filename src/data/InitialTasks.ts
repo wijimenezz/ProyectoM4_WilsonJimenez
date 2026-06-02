@@ -1,4 +1,4 @@
-import type { Task } from "../components/dashboard/board/taskCard/TaskCard.Types";
+import type { Task } from "../types/TaskCard.Types";
 
 export const INITIAL_TASKS: Task[] = [
   {

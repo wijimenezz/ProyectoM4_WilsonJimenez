@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ChecklistItem } from "./TypesTaskForm";
+import type { ChecklistItem } from "../../types/TaskCard.Types";
 
 const CloseIcon = () => (
   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">

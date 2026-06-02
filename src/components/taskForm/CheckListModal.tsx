@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import type { ChecklistItem } from "./TypesTaskForm";
 import { Checklist } from "./CheckList";
+import type { ChecklistItem } from "../../types/TaskCard.Types";
 
 interface ChecklistModalProps {
   title: string;

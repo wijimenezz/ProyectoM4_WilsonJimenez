@@ -1,9 +1,7 @@
-import { CheckIcon } from "../shared/icons";
-import type { SwatchColor } from "./TypesTaskForm";
+// ColorSelector.tsx
+import type { BadgeColor, ColorLabelMap } from "../../types/TaskCard.Types";
 
-//Esto General el color de la tarea, luego hay que colocarle accion
-
-const SWATCH_COLORS: SwatchColor[] = [
+const COLORS: BadgeColor[] = [
   "indigo",
   "emerald",
   "amber",
@@ -12,32 +10,79 @@ const SWATCH_COLORS: SwatchColor[] = [
   "slate",
 ];
 
-<CheckIcon />;
-
 interface ColorSelectorProps {
-  selected: SwatchColor;
-  onChange: (color: SwatchColor) => void;
+  selected: BadgeColor;
+  onChange: (color: BadgeColor) => void;
+  labels: ColorLabelMap;
+  onLabelChange: (color: BadgeColor, name: string) => void;
 }
 
-export const ColorSelector = ({ selected, onChange }: ColorSelectorProps) => (
-  <div
-    className="color-selector"
-    role="group"
-    aria-labelledby="color-selector-label"
-  >
-    {SWATCH_COLORS.map((c) => (
-      <button
-        key={c}
-        className={`color-selector__swatch color-selector__swatch--${c}${
-          selected === c ? " color-selector__swatch--selected" : ""
-        }`}
-        type="button"
-        aria-label={c.charAt(0).toUpperCase() + c.slice(1)}
-        aria-pressed={selected === c}
-        onClick={() => onChange(c)}
-      >
-        {selected === c && <CheckIcon />}
-      </button>
-    ))}
-  </div>
-);
+export const ColorSelector = ({
+  selected,
+  onChange,
+  labels,
+  onLabelChange,
+}: ColorSelectorProps) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-2)",
+      }}
+    >
+      {/* Swatches */}
+      <div className="color-selector" aria-label="Label color selector">
+        {COLORS.map((color) => (
+          <button
+            key={color}
+            type="button"
+            className={`color-selector__swatch color-selector__swatch--${color} ${
+              selected === color ? "color-selector__swatch--selected" : ""
+            }`}
+            title={labels[color]}
+            aria-label={`${labels[color]} (${color})`}
+            aria-pressed={selected === color}
+            onClick={() => onChange(color)}
+          >
+            {selected === color && (
+              <svg
+                className="color-selector__check"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 6l3 3 5-5"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Input de nombre para el color seleccionado */}
+      <div className="form-group">
+        <label className="form-label" htmlFor={`color-label-${selected}`}>
+          Name for this color
+          <span className="form-label__optional"> (e.g. Urgent)</span>
+        </label>
+        <input
+          className="form-input"
+          id={`color-label-${selected}`}
+          type="text"
+          value={labels[selected]}
+          onChange={(e) => onLabelChange(selected, e.target.value)}
+          placeholder="Label name..."
+          maxLength={20}
+        />
+      </div>
+    </div>
+  );
+};

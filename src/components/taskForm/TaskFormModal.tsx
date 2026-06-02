@@ -1,49 +1,74 @@
 import "./TaskFormModal.css";
 import { useState } from "react";
-import type {
-  Attachment,
-  ChecklistItem,
-  SwatchColor,
-  TaskFormData,
-} from "./TypesTaskForm";
 import { ModalHeader } from "./ModalHeader";
 import { ColorSelector } from "./ColorSelector";
 import { DeadlinePicker } from "./DeadLinePicker";
 import { AttachmentsField } from "./Attachment";
 import { Checklist } from "./CheckList";
 import { ModalFooter } from "./ModalFooter";
+import type {
+  Attachment,
+  BadgeColor,
+  ChecklistItem,
+  ColorLabelMap,
+  TaskFormData,
+} from "../../types/TaskCard.Types";
+import { DEFAULT_COLOR_LABELS } from "../../types/TaskCard.Types";
 
 interface TaskFormModalProps {
   onClose?: () => void;
   onSubmit?: (data: TaskFormData) => void;
 }
 
-const INITIAL_CHECKLIST: ChecklistItem[] = [];
-
-const INITIAL_ATTACHMENTS: Attachment[] = [];
-
 export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
   // --- Estado del formulario ---
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [color, setColor] = useState<SwatchColor>("indigo");
+  const [color, setColor] = useState<BadgeColor>("indigo");
+  const [colorLabels, setColorLabels] = useState<ColorLabelMap>({
+    ...DEFAULT_COLOR_LABELS,
+  });
   const [deadline, setDeadline] = useState("");
-  const [attachments, setAttachments] =
-    useState<Attachment[]>(INITIAL_ATTACHMENTS);
-  const [checklist, setChecklist] =
-    useState<ChecklistItem[]>(INITIAL_CHECKLIST);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
 
   // --- Handlers ---
+  const handleLabelChange = (c: BadgeColor, name: string) => {
+    setColorLabels((prev) => ({ ...prev, [c]: name }));
+  };
+
   const handleRemoveAttachment = (id: string) => {
     setAttachments((prev) => prev.filter((a) => a.id !== id));
   };
+
   const handleAddAttachments = (newFiles: Attachment[]) => {
     setAttachments((prev) => [...prev, ...newFiles]);
   };
 
   const handleSubmit = () => {
-    onSubmit?.({ title, description, color, deadline, attachments, checklist });
+    const data: TaskFormData = {
+      title,
+      description,
+      color,
+      colorLabel: colorLabels[color],
+      deadline,
+      attachments,
+      checklist,
+    };
+    onSubmit?.(data);
     onClose?.();
+  };
+
+  const handleSaveDraft = () => {
+    console.log("Draft saved:", {
+      title,
+      description,
+      color,
+      colorLabel: colorLabels[color],
+      deadline,
+      attachments,
+      checklist,
+    });
   };
 
   // --- Render ---
@@ -55,17 +80,17 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
       aria-labelledby="modal-title"
     >
       <article className="modal">
-        {/* ① Cabecera: título + botón cerrar */}
+        {/* Cabecera */}
         <ModalHeader title="Create New Task" onClose={onClose} />
 
-        {/* ② Cuerpo: el formulario */}
+        {/* Cuerpo */}
         <div className="modal__body">
           <form
             className="task-form"
             noValidate
             onSubmit={(e) => e.preventDefault()}
           >
-            {/* Campo: título */}
+            {/* Título */}
             <div className="form-group">
               <label className="form-label" htmlFor="task-title">
                 Task title
@@ -82,7 +107,7 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
               />
             </div>
 
-            {/* Campo: descripción */}
+            {/* Descripción */}
             <div className="form-group">
               <label className="form-label" htmlFor="task-description">
                 Description
@@ -98,35 +123,38 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
               />
             </div>
 
-            {/* Fila: color + fecha límite */}
+            {/* Color + Deadline */}
             <div className="form-row form-row--two-col">
               <div className="form-group">
                 <span className="form-label" id="color-selector-label">
                   Label color
                 </span>
-                {/* ③ Átomo: selector de color */}
-                <ColorSelector selected={color} onChange={setColor} />
+                <ColorSelector
+                  selected={color}
+                  onChange={setColor}
+                  labels={colorLabels}
+                  onLabelChange={handleLabelChange}
+                />
               </div>
-              {/* ④ Átomo: selector de fecha */}
               <DeadlinePicker value={deadline} onChange={setDeadline} />
             </div>
 
-            {/* ⑤ Molécula: adjuntos */}
+            {/* Adjuntos */}
             <AttachmentsField
               attachments={attachments}
               onRemove={handleRemoveAttachment}
               onAdd={handleAddAttachments}
             />
 
-            {/* ⑥ Molécula: checklist */}
+            {/* Checklist */}
             <Checklist items={checklist} onChange={setChecklist} />
           </form>
         </div>
 
-        {/* ⑦ Pie: botones de acción */}
+        {/* Pie */}
         <ModalFooter
           onClose={onClose}
-          onSaveDraft={() => console.log("draft saved")}
+          onSaveDraft={handleSaveDraft}
           onSubmit={handleSubmit}
         />
       </article>

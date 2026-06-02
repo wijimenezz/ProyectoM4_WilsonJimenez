@@ -6,7 +6,10 @@ import {
   DotsVerticalIcon,
 } from "../../../shared/icons";
 import { ProgressBar } from "./ProgressBar";
-import type { BadgeColor, TaskCardProps } from "./TaskCard.Types";
+import type {
+  BadgeColor,
+  TaskCardProps,
+} from "../../../../types/TaskCard.Types";
 import "./TaskCard.css";
 
 const TaskBadge = ({ color, label }: { color: BadgeColor; label: string }) => (
