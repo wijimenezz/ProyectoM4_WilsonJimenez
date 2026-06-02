@@ -1,5 +1,5 @@
 import "./TaskFormModal.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModalHeader } from "./ModalHeader";
 import { ColorSelector } from "./ColorSelector";
 import { DeadlinePicker } from "./DeadLinePicker";
@@ -11,6 +11,7 @@ import type {
   BadgeColor,
   ChecklistItem,
   ColorLabelMap,
+  Task,
   TaskFormData,
 } from "../../types/TaskCard.Types";
 import { DEFAULT_COLOR_LABELS } from "../../types/TaskCard.Types";
@@ -18,11 +19,20 @@ import { DEFAULT_COLOR_LABELS } from "../../types/TaskCard.Types";
 interface TaskFormModalProps {
   onClose?: () => void;
   onSubmit?: (data: TaskFormData) => void;
+  task?: Task;
+  title?: string;
+  submitLabel?: string;
 }
 
-export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
+export const TaskFormModal = ({
+  onClose,
+  onSubmit,
+  task,
+  title = "Create New Task",
+  submitLabel = "Create Task",
+}: TaskFormModalProps) => {
   // --- Estado del formulario ---
-  const [title, setTitle] = useState("");
+  const [taskTitle, setTaskTitle] = useState("");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState<BadgeColor>("indigo");
   const [colorLabels, setColorLabels] = useState<ColorLabelMap>({
@@ -31,6 +41,30 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
   const [deadline, setDeadline] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+
+  useEffect(() => {
+    if (!task) {
+      setTaskTitle("");
+      setDescription("");
+      setColor("indigo");
+      setColorLabels({ ...DEFAULT_COLOR_LABELS });
+      setDeadline("");
+      setAttachments([]);
+      setChecklist([]);
+      return;
+    }
+
+    setTaskTitle(task.title);
+    setDescription(task.description);
+    setColor(task.badge.color);
+    setColorLabels((prev) => ({
+      ...prev,
+      [task.badge.color]: task.badge.label,
+    }));
+    setDeadline(task.deadline ?? "");
+    setAttachments(task.attachments);
+    setChecklist(task.checklist);
+  }, [task]);
 
   // --- Handlers ---
   const handleLabelChange = (c: BadgeColor, name: string) => {
@@ -47,7 +81,7 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
 
   const handleSubmit = () => {
     const data: TaskFormData = {
-      title,
+      title: taskTitle,
       description,
       color,
       colorLabel: colorLabels[color],
@@ -81,7 +115,7 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
     >
       <article className="modal">
         {/* Cabecera */}
-        <ModalHeader title="Create New Task" onClose={onClose} />
+        <ModalHeader title={title} onClose={onClose} />
 
         {/* Cuerpo */}
         <div className="modal__body">
@@ -102,8 +136,8 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
                 name="title"
                 placeholder="Enter a clear task title..."
                 aria-required="true"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={taskTitle}
+                onChange={(e) => setTaskTitle(e.target.value)}
               />
             </div>
 
@@ -156,6 +190,7 @@ export const TaskFormModal = ({ onClose, onSubmit }: TaskFormModalProps) => {
           onClose={onClose}
           onSaveDraft={handleSaveDraft}
           onSubmit={handleSubmit}
+          submitLabel={submitLabel}
         />
       </article>
     </div>

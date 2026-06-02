@@ -2,12 +2,14 @@ interface ModalFooterProps {
   onClose?: () => void;
   onSaveDraft?: () => void;
   onSubmit?: () => void;
+  submitLabel?: string;
 }
 
 export const ModalFooter = ({
   onClose,
   onSaveDraft,
   onSubmit,
+  submitLabel = "Create Task",
 }: ModalFooterProps) => (
   <footer className="modal__footer">
     <button className="btn btn--ghost btn--sm" type="button" onClick={onClose}>
@@ -26,7 +28,7 @@ export const ModalFooter = ({
         type="button"
         onClick={onSubmit}
       >
-        Create Task
+        {submitLabel}
       </button>
     </div>
   </footer>

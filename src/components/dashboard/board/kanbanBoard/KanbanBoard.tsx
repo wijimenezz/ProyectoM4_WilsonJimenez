@@ -10,9 +10,18 @@ import "./KanbanBoard.css";
 interface KanbanBoardProps {
   tasks: Task[];
   onTaskClick: (task: Task) => void;
+  onEditTask: (task: Task) => void;
+  onDeleteTask: (taskId: string) => void;
+  onToggleCompleteTask: (task: Task) => void;
 }
 
-export const KanbanBoard = ({ tasks, onTaskClick }: KanbanBoardProps) => {
+export const KanbanBoard = ({
+  tasks,
+  onTaskClick,
+  onEditTask,
+  onDeleteTask,
+  onToggleCompleteTask,
+}: KanbanBoardProps) => {
   // ======= NUEVO: filtra las tareas por columna =======
   const todo = tasks.filter((t) => t.columnId === "todo");
   const inProgress = tasks.filter((t) => t.columnId === "in-progress");
@@ -28,7 +37,13 @@ export const KanbanBoard = ({ tasks, onTaskClick }: KanbanBoardProps) => {
           {/* ======= NUEVO: renderiza dinámico en lugar de hardcodeado ======= */}
           {todo.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} onClick={() => onTaskClick(task)} />
+              <TaskCard
+                {...task}
+                onClick={() => onTaskClick(task)}
+                onEditTask={() => onEditTask(task)}
+                onDeleteTask={() => onDeleteTask(task.id)}
+                onToggleCompleteTask={() => onToggleCompleteTask(task)}
+              />
             </li>
           ))}
           {/* ======= FIN NUEVO ======= */}
@@ -42,7 +57,13 @@ export const KanbanBoard = ({ tasks, onTaskClick }: KanbanBoardProps) => {
         >
           {inProgress.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} onClick={() => onTaskClick(task)} />
+              <TaskCard
+                {...task}
+                onClick={() => onTaskClick(task)}
+                onEditTask={() => onEditTask(task)}
+                onDeleteTask={() => onDeleteTask(task.id)}
+                onToggleCompleteTask={() => onToggleCompleteTask(task)}
+              />
             </li>
           ))}
         </KanbanColumn>
@@ -55,7 +76,14 @@ export const KanbanBoard = ({ tasks, onTaskClick }: KanbanBoardProps) => {
         >
           {done.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} done onClick={() => onTaskClick(task)} />
+              <TaskCard
+                {...task}
+                done
+                onClick={() => onTaskClick(task)}
+                onEditTask={() => onEditTask(task)}
+                onDeleteTask={() => onDeleteTask(task.id)}
+                onToggleCompleteTask={() => onToggleCompleteTask(task)}
+              />
             </li>
           ))}
         </KanbanColumn>
@@ -63,7 +91,13 @@ export const KanbanBoard = ({ tasks, onTaskClick }: KanbanBoardProps) => {
         <KanbanColumn title="Backlog" count={backlog.length} accent="amber">
           {backlog.map((task) => (
             <li key={task.id} className="kanban-column__list-item">
-              <TaskCard {...task} onClick={() => onTaskClick(task)} />
+              <TaskCard
+                {...task}
+                onClick={() => onTaskClick(task)}
+                onEditTask={() => onEditTask(task)}
+                onDeleteTask={() => onDeleteTask(task.id)}
+                onToggleCompleteTask={() => onToggleCompleteTask(task)}
+              />
             </li>
           ))}
         </KanbanColumn>

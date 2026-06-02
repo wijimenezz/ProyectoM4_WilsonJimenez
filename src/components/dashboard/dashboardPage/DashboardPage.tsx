@@ -17,15 +17,59 @@ import { useTasks } from "../../../hooks/UseTask";
 
 export const DashboardPage = () => {
   const { user } = useAuth();
-  const { tasks, loading, error, addTask, removeTask, updateChecklist } =
-    useTasks(user!.uid);
+  const {
+    tasks,
+    loading,
+    error,
+    addTask,
+    editTask,
+    removeTask,
+    updateChecklist,
+  } = useTasks(user!.uid);
 
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [showTaskModal, setShowTaskModal] = useState(false);
 
-  // CREATE — construye la Task y la manda a Firestore
-  const handleCreateTask = async (data: TaskFormData) => {
-    await addTask({
+  const openCreateModal = () => {
+    setTaskToEdit(null);
+    setShowTaskModal(true);
+  };
+
+  const openEditModal = (task: Task) => {
+    setTaskToEdit(task);
+    setShowTaskModal(true);
+  };
+
+  const handleSaveTask = async (data: TaskFormData) => {
+    const progress =
+      data.checklist.length > 0
+        ? Math.round(
+            (data.checklist.filter((item) => item.done).length /
+              data.checklist.length) *
+              100,
+          )
+        : 0;
+
+    if (!taskToEdit) {
+      await addTask({
+        title: data.title,
+        description: data.description,
+        badge: {
+          label: data.colorLabel,
+          color: data.color,
+        },
+        deadline: data.deadline || undefined,
+        progress,
+        assignees: [],
+        checklist: data.checklist,
+        attachments: data.attachments,
+        columnId: "todo",
+      });
+      return;
+    }
+
+    await editTask(taskToEdit.id, {
       title: data.title,
       description: data.description,
       badge: {
@@ -33,12 +77,11 @@ export const DashboardPage = () => {
         color: data.color,
       },
       deadline: data.deadline || undefined,
-      progress: 0,
-      assignees: [],
-      checklist: data.checklist,
       attachments: data.attachments,
-      columnId: "todo",
+      checklist: data.checklist,
+      progress,
     });
+    setTaskToEdit(null);
   };
 
   // UPDATE checklist + progreso
@@ -51,6 +94,20 @@ export const DashboardPage = () => {
   // DELETE
   const handleDeleteTask = async (taskId: string) => {
     await removeTask(taskId);
+    if (taskToEdit?.id === taskId) {
+      setTaskToEdit(null);
+      setShowTaskModal(false);
+    }
+    if (selectedTask?.id === taskId) {
+      setSelectedTask(null);
+    }
+  };
+
+  const handleToggleCompleteTask = async (task: Task) => {
+    await editTask(task.id, {
+      done: !task.done,
+      columnId: task.done ? "todo" : "done",
+    });
   };
 
   if (loading) {
@@ -76,7 +133,7 @@ export const DashboardPage = () => {
       <TopNavigation />
 
       <main className="dashboard__main" aria-label="Project Board">
-        <BoardHeader onNewTask={() => setShowModal(true)} />
+        <BoardHeader onNewTask={openCreateModal} />
 
         {error && (
           <p
@@ -89,7 +146,13 @@ export const DashboardPage = () => {
           </p>
         )}
 
-        <KanbanBoard tasks={tasks} onTaskClick={setSelectedTask} />
+        <KanbanBoard
+          tasks={tasks}
+          onTaskClick={setSelectedTask}
+          onEditTask={openEditModal}
+          onDeleteTask={handleDeleteTask}
+          onToggleCompleteTask={handleToggleCompleteTask}
+        />
 
         {selectedTask && (
           <ChecklistModal
@@ -102,12 +165,18 @@ export const DashboardPage = () => {
         )}
       </main>
 
-      {showModal && (
+      {showTaskModal && (
         <TaskFormModal
-          onClose={() => setShowModal(false)}
+          task={taskToEdit ?? undefined}
+          title={taskToEdit ? "Editar tarea" : "Create New Task"}
+          submitLabel={taskToEdit ? "Guardar cambios" : "Create Task"}
+          onClose={() => {
+            setShowTaskModal(false);
+            setTaskToEdit(null);
+          }}
           onSubmit={async (data) => {
-            await handleCreateTask(data);
-            setShowModal(false);
+            await handleSaveTask(data);
+            setShowTaskModal(false);
           }}
         />
       )}
