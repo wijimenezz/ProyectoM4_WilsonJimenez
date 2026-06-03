@@ -1,4 +1,5 @@
 import { PlusIcon } from "../../../shared/icons";
+import TaskFormModal from "../../../taskForm/TaskFormModal";
 
 type ColumnAccent = "slate" | "indigo" | "emerald" | "amber";
 

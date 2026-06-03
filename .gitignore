@@ -26,3 +26,4 @@ miapp.tsx
 .env
 
 .vercel
+.env*
