@@ -1,9 +1,11 @@
+import { useDroppable } from "@dnd-kit/core";
 import { PlusIcon } from "../../../shared/icons";
 
 type ColumnAccent = "slate" | "indigo" | "emerald" | "amber";
 
 interface KanbanColumnProps {
   title: string;
+  columnId: string;
   count: number;
   accent: ColumnAccent;
   countVariant?: "default" | "active" | "done";
@@ -13,12 +15,15 @@ interface KanbanColumnProps {
 
 export const KanbanColumn = ({
   title,
+  columnId,
   count,
   accent,
   countVariant = "default",
   onAddTask,
   children,
 }: KanbanColumnProps) => {
+  const { setNodeRef, isOver } = useDroppable({ id: columnId });
+
   const countClass = [
     "kanban-column__count",
     countVariant === "active" ? "kanban-column__count--active" : "",
@@ -59,7 +64,16 @@ export const KanbanColumn = ({
         </button>
       </header>
 
-      <ul className="kanban-column__list" aria-label={`Tasks in ${title}`}>
+      <ul
+        ref={setNodeRef}
+        className={[
+          "kanban-column__list",
+          isOver ? "kanban-column__list--drag-over" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        aria-label={`Tasks in ${title}`}
+      >
         {children}
       </ul>
 
