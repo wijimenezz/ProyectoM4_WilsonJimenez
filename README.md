@@ -16,7 +16,19 @@ https://proyecto-m4-alpha.vercel.app
 
 # Proyecto M4 - Task Manager
 
-Una aplicación web moderna de gestión de tareas con soporte para checklist, drag and drop, autenticación, persistencia de datos y envío de notificaciones por email.
+## Ver Video
+
+```
+https://www.youtube.com/watch?v=C2R099ew47I
+```
+
+---
+
+Una aplicación web moderna de gestión de tareas con soporte para checklist, drag and drop, autenticación, persistencia de datos y envío de notificaciones por email mediante WAS.
+
+# NOTA
+
+El sistema de envio mediane AWS es funcional pero solo con correos verificados por SES (Simple Email Service) ya que estoy usando una cuenta SandBox (Grauita), asi que si un usuario nuevo no registrado en SES entra a la app con su correo, podra usar la app sin problema pero no podra enviar el estado de sus tareas a su correo ya que necesita primero ser verificado por SES.
 
 ## Descripción del Proyecto
 
