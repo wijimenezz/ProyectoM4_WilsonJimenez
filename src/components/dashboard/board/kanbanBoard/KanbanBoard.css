@@ -190,3 +190,22 @@
   color: var(--color-indigo);
   background: var(--color-indigo-light);
 }
+
+.task-card {
+  cursor: grab;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+/* Animación suave al entrar a una columna */
+.kanban-column__list--drag-over {
+  background-color: var(--color-surface-hover, rgba(99, 102, 241, 0.06));
+  border-radius: var(--radius-md, 8px);
+  outline: 2px dashed rgba(99, 102, 241, 0.3);
+  outline-offset: 4px;
+  transition:
+    background-color 0.2s ease,
+    outline 0.2s ease;
+}
