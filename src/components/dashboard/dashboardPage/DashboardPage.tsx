@@ -1,4 +1,3 @@
-// src/features/dashboard/dashboardPage/DashboardPage.tsx
 import "./DasboardPage.css";
 import { useMemo, useState } from "react";
 import { KanbanBoard } from "../board/kanbanBoard/KanbanBoard";
@@ -11,6 +10,7 @@ import type {
   Task,
   TaskFormData,
   ChecklistItem,
+  ColumnId,
 } from "../../../types/TaskCard.Types";
 import { useAuth } from "../../../features/auth/Authenticator";
 import { useTasks } from "../../../hooks/UseTask";
@@ -41,6 +41,17 @@ export const DashboardPage = () => {
     setShowTaskModal(true);
   };
 
+  // ← NUEVO: mueve una tarea a otra columna desde drag and drop
+  const handleMoveTask = async (taskId: string, newColumnId: string) => {
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task || task.columnId === newColumnId) return;
+
+    await editTask(taskId, {
+      columnId: newColumnId as ColumnId,
+      done: newColumnId === "done",
+    });
+  };
+
   const handleSendEmails = async () => {
     if (!user?.email) {
       alert("No user email available to send notifications.");
@@ -66,13 +77,8 @@ export const DashboardPage = () => {
     try {
       const response = await fetch("/api/sendEmail", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          to: user.email,
-          summary,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: user.email, summary }),
       });
 
       const result = await response.json();
@@ -92,8 +98,7 @@ export const DashboardPage = () => {
     }
   };
 
-  // --- Notifications: tasks due within threshold or overdue ---
-  const NOTIF_THRESHOLD_DAYS = 1; // 1 day to deadline
+  const NOTIF_THRESHOLD_DAYS = 1;
 
   const parseLocalDateYMD = (ymd?: string) => {
     if (!ymd) return null;
@@ -162,10 +167,7 @@ export const DashboardPage = () => {
       await addTask({
         title: data.title,
         description: data.description,
-        badge: {
-          label: data.colorLabel,
-          color: data.color,
-        },
+        badge: { label: data.colorLabel, color: data.color },
         deadline: data.deadline || undefined,
         progress,
         assignees: [],
@@ -180,10 +182,7 @@ export const DashboardPage = () => {
     await editTask(taskToEdit.id, {
       title: data.title,
       description: data.description,
-      badge: {
-        label: data.colorLabel,
-        color: data.color,
-      },
+      badge: { label: data.colorLabel, color: data.color },
       deadline: data.deadline || undefined,
       attachments: data.attachments,
       checklist: data.checklist,
@@ -194,14 +193,12 @@ export const DashboardPage = () => {
     setTaskToEdit(null);
   };
 
-  // UPDATE checklist + progreso
   const handleSaveChecklist = async (updatedChecklist: ChecklistItem[]) => {
     if (!selectedTask) return;
     await updateChecklist(selectedTask.id, updatedChecklist);
     setSelectedTask(null);
   };
 
-  // DELETE
   const handleDeleteTask = async (taskId: string) => {
     await removeTask(taskId);
     if (taskToEdit?.id === taskId) {
@@ -278,6 +275,7 @@ export const DashboardPage = () => {
           onDeleteTask={handleDeleteTask}
           onToggleCompleteTask={handleToggleCompleteTask}
           onAddTask={openCreateModal}
+          onMoveTask={handleMoveTask}
         />
 
         {selectedTask && (
