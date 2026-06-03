@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   DndContext,
   DragOverlay,
-  PointerSensor,
   useSensor,
   useSensors,
   type DragStartEvent,
@@ -192,8 +191,24 @@ export const KanbanBoard = ({
       </div>
 
       {/* Card flotante que sigue al cursor mientras se arrastra */}
-      <DragOverlay>
-        {activeTask && <TaskCard {...activeTask} onClick={() => {}} />}
+      <DragOverlay
+        dropAnimation={{
+          duration: 200,
+          easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+        }}
+      >
+        {activeTask && (
+          <div
+            style={{
+              transform: "rotate(2deg) scale(1.03)",
+              boxShadow: "0 20px 48px rgba(0,0,0,0.2)",
+              borderRadius: "var(--radius-md, 8px)",
+              cursor: "grabbing",
+            }}
+          >
+            <TaskCard {...activeTask} onClick={() => {}} />
+          </div>
+        )}
       </DragOverlay>
     </DndContext>
   );
