@@ -408,3 +408,24 @@
   color: var(--color-indigo);
   background: var(--color-indigo-light);
 }
+
+/* Error styles */
+.form-input--error {
+  border-color: var(--color-danger);
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.form-input--error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-error {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-danger);
+  margin-top: var(--space-1);
+  padding-left: var(--space-1);
+}
+

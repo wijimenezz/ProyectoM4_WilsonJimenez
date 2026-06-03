@@ -41,6 +41,7 @@ export const TaskFormModal = ({
   const [deadline, setDeadline] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+  const [deadlineError, setDeadlineError] = useState("");
 
   useEffect(() => {
     if (!task) {
@@ -80,6 +81,12 @@ export const TaskFormModal = ({
   };
 
   const handleSubmit = () => {
+    if (!deadline.trim()) {
+      setDeadlineError("Por favor selecciona una fecha límite");
+      return;
+    }
+
+    setDeadlineError("");
     const data: TaskFormData = {
       title: taskTitle,
       description,
@@ -170,7 +177,14 @@ export const TaskFormModal = ({
                   onLabelChange={handleLabelChange}
                 />
               </div>
-              <DeadlinePicker value={deadline} onChange={setDeadline} />
+              <DeadlinePicker
+                value={deadline}
+                onChange={(value) => {
+                  setDeadline(value);
+                  setDeadlineError("");
+                }}
+                error={deadlineError}
+              />
             </div>
 
             {/* Adjuntos */}
