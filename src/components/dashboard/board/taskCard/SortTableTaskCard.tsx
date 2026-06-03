@@ -18,19 +18,21 @@ export const SortableTaskCard = ({
   onDeleteTask,
   onToggleCompleteTask,
 }: SortableTaskCardProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useSortable({ id: task.id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.4 : 1,
+    transform: CSS.Translate.toString(transform),
+    transition: isDragging
+      ? "box-shadow 0.2s ease"
+      : "transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease",
+    opacity: isDragging ? 0.45 : 1,
+    boxShadow: isDragging
+      ? "0 16px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.12)"
+      : undefined,
+    cursor: isDragging ? "grabbing" : "grab",
+    zIndex: isDragging ? 999 : undefined,
+    scale: isDragging ? "1.02" : undefined,
   };
 
   return (
