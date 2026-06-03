@@ -9,7 +9,7 @@ https://github.com/wijimenezz/ProyectoM4_WilsonJimenez
 ## LINK DEL DEPLOY EN VERCEL
 
 ```
-https://proyecto-m4-alpha.vercel.app/
+https://proyecto-m4-alpha.vercel.app
 ```
 
 ---

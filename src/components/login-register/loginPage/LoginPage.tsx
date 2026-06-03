@@ -89,9 +89,12 @@ export const LoginPage = () => {
               <label className="form-label" htmlFor="login-password">
                 Contraseña
               </label>
-              <a className="form-label-row__link" href="#forgot-password">
+              <Link
+                className="form-label-row__link"
+                to="/forgot-password"
+              >
                 Olvidaste tu Contraseña?
-              </a>
+              </Link>
             </div>
             <PasswordInput
               id="login-password"
