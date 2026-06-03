@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Logo } from "../../shared/Logo";
 import { EmailIcon } from "../../shared/icons";
 import { sendPasswordReset } from "../../../features/auth/AuthService";
 import { getAuthErrorMessage } from "../../../features/auth/AuthErrors";
 
 export const ForgotPasswordPage = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -123,7 +122,12 @@ export const ForgotPasswordPage = () => {
               >
                 ✓ Correo Enviado
               </p>
-              <p style={{ color: "var(--color-text-muted)", fontSize: "var(--font-size-sm)" }}>
+              <p
+                style={{
+                  color: "var(--color-text-muted)",
+                  fontSize: "var(--font-size-sm)",
+                }}
+              >
                 Revisa tu bandeja de entrada. Encontrarás un enlace para
                 recuperar tu contraseña.
               </p>
