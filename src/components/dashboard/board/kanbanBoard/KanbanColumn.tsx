@@ -1,5 +1,4 @@
 import { PlusIcon } from "../../../shared/icons";
-import TaskFormModal from "../../../taskForm/TaskFormModal";
 
 type ColumnAccent = "slate" | "indigo" | "emerald" | "amber";
 
@@ -8,6 +7,7 @@ interface KanbanColumnProps {
   count: number;
   accent: ColumnAccent;
   countVariant?: "default" | "active" | "done";
+  onAddTask?: () => void;
   children: React.ReactNode;
 }
 
@@ -16,6 +16,7 @@ export const KanbanColumn = ({
   count,
   accent,
   countVariant = "default",
+  onAddTask,
   children,
 }: KanbanColumnProps) => {
   const countClass = [
@@ -66,6 +67,7 @@ export const KanbanColumn = ({
         className="kanban-column__add-task"
         type="button"
         aria-label={`Add task to ${title}`}
+        onClick={onAddTask}
       >
         <PlusIcon strokeWidth={1.6} />
         Add a task

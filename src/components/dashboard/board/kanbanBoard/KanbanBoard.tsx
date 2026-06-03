@@ -13,6 +13,7 @@ interface KanbanBoardProps {
   onEditTask: (task: Task) => void;
   onDeleteTask: (taskId: string) => void;
   onToggleCompleteTask: (task: Task) => void;
+  onAddTask: () => void;
 }
 
 export const KanbanBoard = ({
@@ -21,6 +22,7 @@ export const KanbanBoard = ({
   onEditTask,
   onDeleteTask,
   onToggleCompleteTask,
+  onAddTask,
 }: KanbanBoardProps) => {
   // ======= NUEVO: filtra las tareas por columna =======
   const todo = tasks.filter((t) => t.columnId === "todo");
@@ -33,7 +35,12 @@ export const KanbanBoard = ({
     <div className="kanban-board" aria-label="Kanban board" role="region">
       <div className="kanban-board__scroll-container">
         {/* count={todo.length} ← ya no es hardcodeado, se calcula solo */}
-        <KanbanColumn title="To Do" count={todo.length} accent="slate">
+        <KanbanColumn
+          title="To Do"
+          count={todo.length}
+          accent="slate"
+          onAddTask={onAddTask}
+        >
           {/* ======= NUEVO: renderiza dinámico en lugar de hardcodeado ======= */}
           {todo.map((task) => (
             <li key={task.id} className="kanban-column__list-item">

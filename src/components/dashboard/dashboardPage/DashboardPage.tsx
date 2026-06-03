@@ -52,8 +52,8 @@ export const DashboardPage = () => {
         const status = task.done
           ? "Completada"
           : task.columnId === "in-progress"
-          ? "En progreso"
-          : "Por hacer";
+            ? "En progreso"
+            : "Por hacer";
         const deadline = task.deadline
           ? `Fecha límite: ${task.deadline}`
           : "Sin fecha límite";
@@ -78,7 +78,9 @@ export const DashboardPage = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || result.message || "Error sending email");
+        throw new Error(
+          result.error || result.message || "Error sending email",
+        );
       }
 
       alert("Email enviado correctamente a " + user.email);
@@ -113,7 +115,8 @@ export const DashboardPage = () => {
         const deadlineDate = parseLocalDateYMD(t.deadline);
         if (!deadlineDate) return null;
         const diffDays = Math.ceil(
-          (deadlineDate.getTime() - todayStart.getTime()) / (1000 * 60 * 60 * 24),
+          (deadlineDate.getTime() - todayStart.getTime()) /
+            (1000 * 60 * 60 * 24),
         );
         return {
           id: t.id,
@@ -125,7 +128,7 @@ export const DashboardPage = () => {
       })
       .filter(Boolean)
       .filter((n) => n!.overdue || n!.daysLeft <= NOTIF_THRESHOLD_DAYS)
-      .sort((a, b) => (a!.daysLeft - b!.daysLeft)) as Array<{
+      .sort((a, b) => a!.daysLeft - b!.daysLeft) as Array<{
       id: string;
       title: string;
       deadline: string;
@@ -274,6 +277,7 @@ export const DashboardPage = () => {
           onEditTask={openEditModal}
           onDeleteTask={handleDeleteTask}
           onToggleCompleteTask={handleToggleCompleteTask}
+          onAddTask={openCreateModal}
         />
 
         {selectedTask && (
